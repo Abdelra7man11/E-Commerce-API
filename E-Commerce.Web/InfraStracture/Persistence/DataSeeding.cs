@@ -25,48 +25,58 @@ namespace Persistence
         {
             try
             {
-                var PendingMigrate = await _dbContext.Database.GetPendingMigrationsAsync();
-
-                // Production 
-                if (PendingMigrate.Any())
+                if (_dbContext.Database.IsNpgsql())
                 {
-                    await _dbContext.Database.MigrateAsync();
+                    await _dbContext.Database.EnsureCreatedAsync();
                 }
+                else
+                {
+                    var PendingMigrate = await _dbContext.Database.GetPendingMigrationsAsync();
+                    if (PendingMigrate.Any())
+                    {
+                        await _dbContext.Database.MigrateAsync();
+                    }
+                }
+
                 if (!_dbContext.Set<ProductBrand>().Any())
                 {
-                 using var ProductBrandData = File.OpenRead(@"..\InfraStracture\Persistence\Data\DataSeed\brands.json");
-                    // Convert From JSON FIle TO List
-                    var ProductBrand = await JsonSerializer.DeserializeAsync<List<ProductBrand>>(ProductBrandData);
-                    if (ProductBrand != null && ProductBrand.Any())
-                        await _dbContext.ProductBrands.AddRangeAsync(ProductBrand);
-
+                    using var ProductBrandData = GetSeedStream("brands.json");
+                    if (ProductBrandData != null)
+                    {
+                        var ProductBrand = await JsonSerializer.DeserializeAsync<List<ProductBrand>>(ProductBrandData);
+                        if (ProductBrand != null && ProductBrand.Any())
+                            await _dbContext.ProductBrands.AddRangeAsync(ProductBrand);
+                    }
                 }
                 if (!_dbContext.Set<ProductType>().Any())
                 {
-                    using var ProductTypesData = File.OpenRead(@"..\InfraStracture\Persistence\Data\DataSeed\types.json");
-                    // Convert From JSON FIle TO List
-                    var ProductTypes = await JsonSerializer.DeserializeAsync<List<ProductType>>(ProductTypesData);
-                    if (ProductTypes != null && ProductTypes.Any())
-                        await _dbContext.ProductTypes.AddRangeAsync(ProductTypes);
-
+                    using var ProductTypesData = GetSeedStream("types.json");
+                    if (ProductTypesData != null)
+                    {
+                        var ProductTypes = await JsonSerializer.DeserializeAsync<List<ProductType>>(ProductTypesData);
+                        if (ProductTypes != null && ProductTypes.Any())
+                            await _dbContext.ProductTypes.AddRangeAsync(ProductTypes);
+                    }
                 }
                 if (!_dbContext.Set<Product>().Any())
                 {
-                    using var ProductsData = File.OpenRead(@"..\InfraStracture\Persistence\Data\DataSeed\products.json");
-                    // Convert From JSON FIle TO List
-                    var Products = await JsonSerializer.DeserializeAsync<List<Product>>(ProductsData);
-                    if (Products != null && Products.Any())
-                        await _dbContext.Products.AddRangeAsync(Products);
-
+                    using var ProductsData = GetSeedStream("products.json");
+                    if (ProductsData != null)
+                    {
+                        var Products = await JsonSerializer.DeserializeAsync<List<Product>>(ProductsData);
+                        if (Products != null && Products.Any())
+                            await _dbContext.Products.AddRangeAsync(Products);
+                    }
                 }
                 if (!_dbContext.Set<DeliveryMethod>().Any())
                 {
-                    using var DeliveryMethodData = File.OpenRead(@"..\InfraStracture\Persistence\Data\DataSeed\delivery.json");
-                    // Convert From JSON FIle TO List
-                    var DeliveryMethod = await JsonSerializer.DeserializeAsync<List<DeliveryMethod>>(DeliveryMethodData);
-                    if (DeliveryMethod != null && DeliveryMethod.Any())
-                        await _dbContext.Set<DeliveryMethod>().AddRangeAsync(DeliveryMethod);
-
+                    using var DeliveryMethodData = GetSeedStream("delivery.json");
+                    if (DeliveryMethodData != null)
+                    {
+                        var DeliveryMethod = await JsonSerializer.DeserializeAsync<List<DeliveryMethod>>(DeliveryMethodData);
+                        if (DeliveryMethod != null && DeliveryMethod.Any())
+                            await _dbContext.Set<DeliveryMethod>().AddRangeAsync(DeliveryMethod);
+                    }
                 }
 
                 await _dbContext.SaveChangesAsync();
@@ -82,10 +92,17 @@ namespace Persistence
         {
             try
             {
-                var pendingMigrations = await _identityDbContext.Database.GetPendingMigrationsAsync();
-                if (pendingMigrations.Any())
+                if (_identityDbContext.Database.IsNpgsql())
                 {
-                    await _identityDbContext.Database.MigrateAsync();
+                    await _identityDbContext.Database.EnsureCreatedAsync();
+                }
+                else
+                {
+                    var pendingMigrations = await _identityDbContext.Database.GetPendingMigrationsAsync();
+                    if (pendingMigrations.Any())
+                    {
+                        await _identityDbContext.Database.MigrateAsync();
+                    }
                 }
 
                 if (!_roleManager.Roles.Any())
@@ -126,6 +143,25 @@ namespace Persistence
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        private static Stream? GetSeedStream(string fileName)
+        {
+            var candidates = new[]
+            {
+                Path.Combine(AppContext.BaseDirectory, "Data", "DataSeed", fileName),
+                Path.Combine(AppContext.BaseDirectory, "DataSeed", fileName),
+                Path.Combine("..", "InfraStracture", "Persistence", "Data", "DataSeed", fileName),
+                Path.Combine("Data", "DataSeed", fileName),
+                Path.Combine("Persistence", "Data", "DataSeed", fileName),
+                Path.Combine("InfraStracture", "Persistence", "Data", "DataSeed", fileName)
+            };
+            foreach (var path in candidates)
+            {
+                if (File.Exists(path))
+                    return File.OpenRead(path);
+            }
+            return null;
         }
     }
 }

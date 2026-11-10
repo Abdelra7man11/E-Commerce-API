@@ -36,10 +36,7 @@ namespace E_Commerce.Web
             {
                 options.AddPolicy("AllowAngular", policy =>
                 {
-                    policy.WithOrigins(
-                              "http://localhost:4200", "https://localhost:4200", "http://127.0.0.1:4200",
-                              "http://localhost:4300", "https://localhost:4300", "http://127.0.0.1:4300"
-                          )
+                    policy.SetIsOriginAllowed(origin => true)
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
@@ -65,25 +62,20 @@ namespace E_Commerce.Web
 
             app.UseCustomExceptionMiddleWare();
 
-            if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
+                options.ConfigObject = new ConfigObject()
                 {
-                    options.ConfigObject = new ConfigObject()
-                    {
-                        DisplayRequestDuration = true
-                    };
-                    options.DocumentTitle = " E-Commerce API";
-                    options.JsonSerializerOptions = new JsonSerializerOptions()
-                    {
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                    };
-                    options.DocExpansion(DocExpansion.None);
-                    options.EnableFilter();
-                    options.EnablePersistAuthorization();
-                });
-            }
+                    DisplayRequestDuration = true
+                };
+                options.DocumentTitle = "NovaMart E-Commerce API";
+                options.DocExpansion(DocExpansion.None);
+                options.EnableFilter();
+                options.EnablePersistAuthorization();
+            });
+
+            app.MapGet("/", () => Results.Redirect("/swagger"));
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
