@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" rx="16" fill="#F8FAFC"/>
+  <rect x="1" y="1" width="398" height="298" rx="15" stroke="#E2E8F0" stroke-width="2"/>
+  <circle cx="200" cy="130" r="50" fill="#FFF2EB"/>
+  <!-- Modern Dish Icon -->
+  <path d="M175 145C175 131.193 186.193 120 200 120C213.807 120 225 131.193 225 145H175Z" fill="#FF5A00"/>
+  <path d="M165 150H235V154C235 155.105 234.105 156 233 156H167C165.895 156 165 155.105 165 154V150Z" fill="#E04E00"/>
+  <path d="M198 105C198 103.895 198.895 103 200 103C201.105 103 202 103.895 202 105V115H198V105Z" fill="#FF7728"/>
+  <circle cx="200" cy="100" r="3" fill="#FF7728"/>
+  <text x="200" y="210" text-anchor="middle" fill="#0F172A" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="16">NovaMart Prime</text>
+  <text x="200" y="232" text-anchor="middle" fill="#64748B" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="13">Fresh Selection</text>
+</svg>
