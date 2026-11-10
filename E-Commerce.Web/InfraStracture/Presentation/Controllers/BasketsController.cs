@@ -6,9 +6,10 @@ namespace Presentation.Controllers
 {
     public class BasketsController(IServiceManager _serviceManager) : ApiBaseController
     {
-        // Get Basket
-        [HttpGet] // GET BaseUrl/api/Baskets?id=... or ?key=...
-        public async Task<ActionResult<BasketDto?>> GetBasket([FromQuery] string? id, [FromQuery] string? key)
+        // Get Basket: GET /api/Baskets?id=... or /api/Baskets/{id}
+        [HttpGet]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BasketDto?>> GetBasket([FromRoute] string? id, [FromQuery] string? key)
         {
             var basketKey = id ?? key;
             if (string.IsNullOrEmpty(basketKey)) return Ok(null);
@@ -17,7 +18,7 @@ namespace Presentation.Controllers
             return Ok(basket);
         }
 
-        // Create Or Update Basket
+        // Create Or Update Basket: POST /api/Baskets
         [HttpPost]
         public async Task<ActionResult<BasketDto>> CreateOrUpdateBasket(BasketDto basket)
         {
@@ -25,16 +26,16 @@ namespace Presentation.Controllers
             return Ok(Basket);
         }
 
-        // Delete Basket
+        // Delete Basket: DELETE /api/Baskets/{id} or DELETE /api/Baskets?id=...
+        [HttpDelete("{id}")]
         [HttpDelete]
-        [HttpDelete("{Key}")]
-        public async Task<IActionResult> DeleteBasket([FromQuery] string? id, [FromRoute] string? Key)
+        public async Task<IActionResult> DeleteBasket([FromRoute] string? id, [FromQuery] string? key)
         {
-            var basketKey = id ?? Key;
-            if (string.IsNullOrEmpty(basketKey)) return BadRequest();
+            var basketKey = id ?? key;
+            if (string.IsNullOrEmpty(basketKey)) return Ok(true);
 
-            var Result = await _serviceManager.BasketService.DeleteBasketAsync(basketKey);
-            return Ok(Result);
+            var result = await _serviceManager.BasketService.DeleteBasketAsync(basketKey);
+            return Ok(result);
         }
     }
 }

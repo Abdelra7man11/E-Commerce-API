@@ -217,15 +217,19 @@ export class BasketService {
     this.basket.set(null);
     this.saveBasketToLocal(null);
 
-    return this.http.delete(`${this.baseUrl}baskets?id=${encodeURIComponent(id)}&key=${encodeURIComponent(id)}`).subscribe({
+    return this.http.delete(`${this.baseUrl}baskets/${encodeURIComponent(id)}`).subscribe({
       next: () => {},
-      error: () => {}
+      error: () => {
+        this.http.delete(`${this.baseUrl}baskets?id=${encodeURIComponent(id)}`).subscribe({
+          error: () => {}
+        });
+      }
     });
   }
 
   createPaymentIntent() {
     const basketId = this.basket()?.id;
     if (!basketId) return;
-    return this.http.post<CustomerBasket>(this.baseUrl + 'payments/' + basketId, {});
+    return this.http.post<CustomerBasket>(`${this.baseUrl}payments/${encodeURIComponent(basketId)}`, {});
   }
 }
