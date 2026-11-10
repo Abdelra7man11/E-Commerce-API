@@ -5,11 +5,12 @@ import { Router, RouterModule } from '@angular/router';
 import { AccountService } from '../../../core/services/account.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { BrandLogoComponent } from '../../../shared/components/brand-logo/brand-logo.component';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, BrandLogoComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, BrandLogoComponent, TranslatePipe],
   template: `
     <div class="auth-page py-5">
       <div class="container-xl">
@@ -29,8 +30,8 @@ import { BrandLogoComponent } from '../../../shared/components/brand-logo/brand-
             <!-- Card -->
             <div class="card border-0 shadow-lg rounded-5 overflow-hidden bg-white p-4 p-sm-5">
               <div class="text-center mb-4">
-                <h3 class="fw-bold text-dark mb-1">Create Account</h3>
-                <p class="text-muted small">Join NovaMart Prime for instant delivery & perks</p>
+                <h3 class="fw-bold text-dark mb-1">{{ 'auth.createAccount' | translate }}</h3>
+                <p class="text-muted small">{{ 'auth.registerSubtitle' | translate }}</p>
               </div>
 
               <!-- Server Error Alert Banner -->
@@ -48,7 +49,7 @@ import { BrandLogoComponent } from '../../../shared/components/brand-logo/brand-
               <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                 <!-- Display Name -->
                 <div class="mb-3">
-                  <label class="form-label small fw-semibold text-muted">Full Name *</label>
+                  <label class="form-label small fw-semibold text-muted">{{ 'auth.displayName' | translate }} *</label>
                   <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted rounded-start-pill ps-3">
                       <i class="fa-regular fa-user"></i>
@@ -67,7 +68,7 @@ import { BrandLogoComponent } from '../../../shared/components/brand-logo/brand-
 
                 <!-- Email -->
                 <div class="mb-3">
-                  <label class="form-label small fw-semibold text-muted">Email Address *</label>
+                  <label class="form-label small fw-semibold text-muted">{{ 'auth.email' | translate }} *</label>
                   <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted rounded-start-pill ps-3">
                       <i class="fa-regular fa-envelope"></i>
@@ -101,7 +102,7 @@ import { BrandLogoComponent } from '../../../shared/components/brand-logo/brand-
 
                 <!-- Password -->
                 <div class="mb-4">
-                  <label class="form-label small fw-semibold text-muted">Password *</label>
+                  <label class="form-label small fw-semibold text-muted">{{ 'auth.password' | translate }} *</label>
                   <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted rounded-start-pill ps-3">
                       <i class="fa-solid fa-lock"></i>
@@ -164,7 +165,7 @@ import { BrandLogoComponent } from '../../../shared/components/brand-logo/brand-
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <span>Creating Account...</span>
                   } @else {
-                    <span>Create Account</span>
+                    <span>{{ 'auth.registerBtn' | translate }}</span>
                     <i class="fa-solid fa-arrow-right"></i>
                   }
                 </button>
@@ -172,9 +173,9 @@ import { BrandLogoComponent } from '../../../shared/components/brand-logo/brand-
 
               <!-- Footer -->
               <div class="text-center mt-3 pt-3 border-top">
-                <span class="text-muted small">Already have an account? </span>
+                <span class="text-muted small">{{ 'auth.alreadyAccount' | translate }} </span>
                 <a routerLink="/account/login" class="text-orange fw-bold text-decoration-none small">
-                  Sign In
+                  {{ 'auth.loginHere' | translate }}
                 </a>
               </div>
             </div>

@@ -1082,3 +1082,80 @@ html.dark-theme .loader-content {
     size: auto;
   }
 }
+
+/* ========================================================
+   COMPREHENSIVE RTL (ARABIC) MODERN STYLES
+   ======================================================== */
+html[dir="rtl"],
+body.rtl-mode {
+  font-family: 'Cairo', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  direction: rtl;
+  text-align: right;
+
+  /* Typography tweaks for Arabic legibility */
+  h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Cairo', sans-serif !important;
+    font-weight: 700;
+  }
+
+  /* Cart Drawer in RTL: Slide from the left */
+  .cart-drawer {
+    right: auto !important;
+    left: 0 !important;
+    transform: translateX(-100%) !important;
+  }
+
+  .cart-drawer.open {
+    transform: translateX(0) !important;
+  }
+
+  /* Directional Icon Flipping */
+  .fa-chevron-right:not(.no-rtl-flip),
+  .fa-arrow-right:not(.no-rtl-flip) {
+    transform: scaleX(-1);
+  }
+
+  .fa-chevron-left:not(.no-rtl-flip),
+  .fa-arrow-left:not(.no-rtl-flip) {
+    transform: scaleX(-1);
+  }
+
+  /* Dropdown Menus in RTL */
+  .dropdown-menu-end {
+    right: auto !important;
+    left: 0 !important;
+  }
+
+  /* Filter list hover translation */
+  .filter-list .list-group-item:hover {
+    transform: translateX(-3px) !important;
+  }
+
+  /* Active filters bar clear-all button */
+  .active-filters-bar .clear-all-btn {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+
+  /* Badges & Pills */
+  .badge.ms-2 {
+    margin-left: 0 !important;
+    margin-right: 0.5rem !important;
+  }
+
+  /* Input group rounded pills */
+  .input-group > .rounded-start-pill {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-top-right-radius: 50rem !important;
+    border-bottom-right-radius: 50rem !important;
+  }
+
+  .input-group > .rounded-end-pill {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 50rem !important;
+    border-bottom-left-radius: 50rem !important;
+  }
+}
+

@@ -5,11 +5,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Brand, Pagination, Product, ProductType, ShopParams } from '../../core/models/product.model';
 import { ShopService } from '../../core/services/shop.service';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ProductCardComponent],
+  imports: [CommonModule, RouterModule, FormsModule, ProductCardComponent, TranslatePipe],
   template: `
     <div class="shop-page py-4">
       <div class="container-xl">
@@ -18,18 +19,18 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
           <div>
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb mb-1 small text-muted">
-                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
-                <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">Catalog</li>
+                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">{{ 'shop.breadcrumbHome' | translate }}</a></li>
+                <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">{{ 'shop.breadcrumbCatalog' | translate }}</li>
               </ol>
             </nav>
-            <h2 class="fw-bold m-0 text-dark">Explore Our Products</h2>
+            <h2 class="fw-bold m-0 text-dark">{{ 'shop.title' | translate }}</h2>
             <p class="text-muted small m-0 mt-1">
               @if (totalCount() > 0) {
-                Showing <span class="fw-bold text-dark">{{ ((shopParams.pageNumber - 1) * shopParams.pageSize) + 1 }}</span> - 
-                <span class="fw-bold text-dark">{{ getEndIndex() }}</span> of 
-                <span class="fw-bold text-orange">{{ totalCount() }}</span> products
+                {{ 'shop.showing' | translate }} <span class="fw-bold text-dark">{{ ((shopParams.pageNumber - 1) * shopParams.pageSize) + 1 }}</span> {{ 'shop.to' | translate }} 
+                <span class="fw-bold text-dark">{{ getEndIndex() }}</span> {{ 'shop.of' | translate }} 
+                <span class="fw-bold text-orange">{{ totalCount() }}</span> {{ 'shop.products' | translate }}
               } @else {
-                No products found
+                {{ 'shop.noProducts' | translate }}
               }
             </p>
           </div>
@@ -38,30 +39,30 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <div class="custom-select-pill d-flex align-items-center gap-2 px-3 py-1 rounded-pill shadow-xs">
               <i class="fa-solid fa-arrow-down-short-wide text-orange small"></i>
-              <label class="small text-muted mb-0 fw-semibold text-nowrap">Sort:</label>
+              <label class="small text-muted mb-0 fw-semibold text-nowrap">{{ 'shop.sort' | translate }}</label>
               <select 
                 class="form-select form-select-sm border-0 bg-transparent fw-semibold shadow-none ps-1 pe-4 cursor-pointer" 
                 style="height: 34px; line-height: 34px; font-size: 0.88rem;"
                 [ngModel]="shopParams.sort" 
                 (ngModelChange)="onSortSelected($event)">
-                <option value="nameAsc">Alphabetical (A - Z)</option>
-                <option value="priceAsc">Price: Low to High</option>
-                <option value="priceDesc">Price: High to Low</option>
+                <option value="nameAsc">{{ 'shop.sortNameAsc' | translate }}</option>
+                <option value="priceAsc">{{ 'shop.sortPriceAsc' | translate }}</option>
+                <option value="priceDesc">{{ 'shop.sortPriceDesc' | translate }}</option>
               </select>
             </div>
 
             <div class="custom-select-pill d-flex align-items-center gap-2 px-3 py-1 rounded-pill shadow-xs">
               <i class="fa-solid fa-grip text-orange small"></i>
-              <label class="small text-muted mb-0 fw-semibold text-nowrap">Show:</label>
+              <label class="small text-muted mb-0 fw-semibold text-nowrap">{{ 'shop.show' | translate }}</label>
               <select 
                 class="form-select form-select-sm border-0 bg-transparent fw-semibold shadow-none ps-1 pe-4 cursor-pointer" 
                 style="height: 34px; line-height: 34px; font-size: 0.88rem;"
                 [ngModel]="shopParams.pageSize" 
                 (ngModelChange)="onPageSizeChange($event)">
-                <option [ngValue]="6">6 per page</option>
-                <option [ngValue]="9">9 per page</option>
-                <option [ngValue]="12">12 per page</option>
-                <option [ngValue]="18">18 per page</option>
+                <option [ngValue]="6">6 {{ 'shop.perPage' | translate }}</option>
+                <option [ngValue]="9">9 {{ 'shop.perPage' | translate }}</option>
+                <option [ngValue]="12">12 {{ 'shop.perPage' | translate }}</option>
+                <option [ngValue]="18">18 {{ 'shop.perPage' | translate }}</option>
               </select>
             </div>
           </div>
@@ -75,14 +76,14 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
               <div class="card border-0 shadow-sm rounded-4 mb-3">
                 <div class="card-body p-3">
                   <h6 class="fw-bold mb-2 text-dark small text-uppercase">
-                    <i class="fa-solid fa-magnifying-glass text-orange me-2"></i>Search
+                    <i class="fa-solid fa-magnifying-glass text-orange me-2"></i>{{ 'shop.search' | translate }}
                   </h6>
                   <div class="input-group">
                     <input 
                       type="text" 
                       class="form-control border-end-0 rounded-start-pill ps-3" 
                       style="height: 42px; font-size: 0.9rem;"
-                      placeholder="Search items..." 
+                      [placeholder]="'shop.searchPlaceholder' | translate" 
                       [(ngModel)]="searchTerm"
                       (keyup.enter)="onSearch()">
                     @if (searchTerm) {
@@ -102,7 +103,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                 <div class="card-body p-3">
                   <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="fw-bold m-0 text-dark small text-uppercase">
-                      <i class="fa-solid fa-layer-group text-orange me-2"></i>Categories
+                      <i class="fa-solid fa-layer-group text-orange me-2"></i>{{ 'shop.categories' | translate }}
                     </h6>
                     <span class="badge bg-light text-muted border rounded-pill">{{ types().length }}</span>
                   </div>
@@ -112,7 +113,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 px-2 border-0 rounded-3 mb-1"
                       [class.active-filter]="shopParams.typeId === 0"
                       (click)="onTypeSelected(0)">
-                      <span>All Categories</span>
+                      <span>{{ 'shop.allCategories' | translate }}</span>
                       <i class="fa-solid fa-chevron-right small opacity-50"></i>
                     </button>
                     @for (type of types(); track type.id) {
@@ -134,7 +135,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                 <div class="card-body p-3">
                   <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="fw-bold m-0 text-dark small text-uppercase">
-                      <i class="fa-solid fa-tag text-orange me-2"></i>Brands
+                      <i class="fa-solid fa-tag text-orange me-2"></i>{{ 'shop.brands' | translate }}
                     </h6>
                     <span class="badge bg-light text-muted border rounded-pill">{{ brands().length }}</span>
                   </div>
@@ -144,7 +145,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 px-2 border-0 rounded-3 mb-1"
                       [class.active-filter]="shopParams.brandId === 0"
                       (click)="onBrandSelected(0)">
-                      <span>All Brands</span>
+                      <span>{{ 'shop.allBrands' | translate }}</span>
                       <i class="fa-solid fa-chevron-right small opacity-50"></i>
                     </button>
                     @for (brand of brands(); track brand.id) {
@@ -168,7 +169,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                   class="btn reset-filters-btn shadow-xs" 
                   (click)="onResetAllFilters()">
                   <i class="fa-solid fa-rotate-left"></i>
-                  <span>Reset All Filters</span>
+                  <span>{{ 'shop.resetAll' | translate }}</span>
                 </button>
               }
 
@@ -177,11 +178,11 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                 <div class="position-relative z-1">
                   <div class="promo-badge">
                     <i class="fa-solid fa-bolt text-warning"></i>
-                    <span>Prime Deals</span>
+                    <span>{{ 'home.promoBadge' | translate }}</span>
                   </div>
-                  <h6 class="promo-title">Free Delivery on $50+</h6>
+                  <h6 class="promo-title">{{ 'home.feature1Title' | translate }}</h6>
                   <p class="promo-desc">
-                    Use promo code <span class="promo-code">PRIME50</span> at checkout!
+                    {{ 'nav.announcement' | translate }} <span class="promo-code">PRIME50</span>!
                   </p>
                 </div>
               </div>
@@ -195,29 +196,29 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
               <div class="active-filters-bar">
                 <span class="active-label">
                   <i class="fa-solid fa-filter text-orange"></i>
-                  <span>Active:</span>
+                  <span>{{ 'shop.active' | translate }}</span>
                 </span>
                 @if (getSelectedBrandName()) {
                   <span class="active-filter-badge">
-                    <span>Brand: {{ getSelectedBrandName() }}</span>
+                    <span>{{ 'shop.brandLabel' | translate }} {{ getSelectedBrandName() }}</span>
                     <i class="fa-solid fa-xmark remove-filter-btn" (click)="onBrandSelected(0)"></i>
                   </span>
                 }
                 @if (getSelectedTypeName()) {
                   <span class="active-filter-badge">
-                    <span>Category: {{ getSelectedTypeName() }}</span>
+                    <span>{{ 'shop.categoryLabel' | translate }} {{ getSelectedTypeName() }}</span>
                     <i class="fa-solid fa-xmark remove-filter-btn" (click)="onTypeSelected(0)"></i>
                   </span>
                 }
                 @if (shopParams.search) {
                   <span class="active-filter-badge">
-                    <span>Search: "{{ shopParams.search }}"</span>
+                    <span>{{ 'shop.searchLabel' | translate }} "{{ shopParams.search }}"</span>
                     <i class="fa-solid fa-xmark remove-filter-btn" (click)="onResetSearch()"></i>
                   </span>
                 }
                 <button type="button" class="clear-all-btn" (click)="onResetAllFilters()">
                   <i class="fa-solid fa-xmark small"></i>
-                  <span>Clear all</span>
+                  <span>{{ 'shop.clearAll' | translate }}</span>
                 </button>
               </div>
             }
@@ -242,13 +243,13 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                 <div class="empty-icon-circle mx-auto mb-3 bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                   <i class="fa-solid fa-triangle-exclamation fs-2"></i>
                 </div>
-                <h4 class="fw-bold mb-1 text-danger">Server & Database Connection Error</h4>
+                <h4 class="fw-bold mb-1 text-danger">{{ 'shop.connectionErrorTitle' | translate }}</h4>
                 <p class="text-muted small mx-auto mb-4" style="max-width: 480px;">
-                  تعذر الاتصال بخادم الـ ASP.NET Core API المباشر (https://localhost:7112). تأكد من تشغيل الباك إند وصحة الاتصال بقاعدة البيانات.
+                  {{ 'shop.connectionErrorDesc' | translate }}
                 </p>
                 <div>
                   <button class="btn btn-orange rounded-pill px-4 py-2 fw-semibold shadow-sm" (click)="loadProducts(); loadBrands(); loadTypes();">
-                    <i class="fa-solid fa-rotate-right me-2"></i>إعادة المحاولة (Retry)
+                    <i class="fa-solid fa-rotate-right me-2"></i>{{ 'shop.retry' | translate }}
                   </button>
                 </div>
               </div>
@@ -273,7 +274,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                           class="page-link" 
                           [disabled]="shopParams.pageNumber <= 1"
                           (click)="onPageChanged(shopParams.pageNumber - 1)">
-                          <i class="fa-solid fa-chevron-left me-1"></i> Prev
+                          <i class="fa-solid fa-chevron-left me-1"></i> {{ 'shop.prev' | translate }}
                         </button>
                       </li>
 
@@ -296,7 +297,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                           class="page-link" 
                           [disabled]="shopParams.pageNumber >= totalPages()"
                           (click)="onPageChanged(shopParams.pageNumber + 1)">
-                          Next <i class="fa-solid fa-chevron-right ms-1"></i>
+                          {{ 'shop.next' | translate }} <i class="fa-solid fa-chevron-right ms-1"></i>
                         </button>
                       </li>
                     </ul>
@@ -309,13 +310,13 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                 <div class="empty-icon-circle mx-auto mb-3 bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
                   <i class="fa-solid fa-box-open fs-2 text-muted"></i>
                 </div>
-                <h4 class="fw-bold mb-1">No Products Found</h4>
+                <h4 class="fw-bold mb-1">{{ 'shop.emptyTitle' | translate }}</h4>
                 <p class="text-muted small mx-auto mb-4" style="max-width: 400px;">
-                  We couldn't find any items matching your selected criteria. Try adjusting your filters or search terms.
+                  {{ 'shop.emptyDesc' | translate }}
                 </p>
                 <div>
                   <button class="btn btn-orange rounded-pill px-4 py-2 fw-semibold shadow-sm" (click)="onResetAllFilters()">
-                    <i class="fa-solid fa-rotate-left me-2"></i>Reset All Filters
+                    <i class="fa-solid fa-rotate-left me-2"></i>{{ 'shop.resetAll' | translate }}
                   </button>
                 </div>
               </div>

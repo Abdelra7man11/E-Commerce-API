@@ -3,21 +3,23 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { BasketService } from '../../../core/services/basket.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { ShopService } from '../../../core/services/shop.service';
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, ProductCardComponent],
+  imports: [CommonModule, RouterModule, ProductCardComponent, TranslatePipe],
   template: `
     <div class="product-detail-page py-5">
       <div class="container-xl">
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-4">
           <ol class="breadcrumb small">
-            <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
-            <li class="breadcrumb-item"><a routerLink="/shop" class="text-decoration-none text-muted">Catalog</a></li>
+            <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">{{ 'shop.breadcrumbHome' | translate }}</a></li>
+            <li class="breadcrumb-item"><a routerLink="/shop" class="text-decoration-none text-muted">{{ 'shop.breadcrumbCatalog' | translate }}</a></li>
             @if (product()) {
               <li class="breadcrumb-item"><a [routerLink]="['/shop']" [queryParams]="{ brandId: 0 }" class="text-decoration-none text-muted">{{ product()?.productBrand }}</a></li>
               <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">{{ product()?.name }}</li>
@@ -67,7 +69,7 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
                     <i class="fa-solid fa-layer-group me-1.5"></i>{{ product()?.productType }}
                   </span>
                   <span class="badge bg-success-subtle text-success px-3 py-1.5 rounded-pill fw-semibold ms-auto">
-                    <i class="fa-solid fa-circle-check me-1"></i> In Stock
+                    <i class="fa-solid fa-circle-check me-1"></i> {{ 'product.inStock' | translate }}
                   </span>
                 </div>
 
@@ -124,8 +126,8 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
                     <div class="d-flex align-items-center gap-2 p-2 bg-white rounded-3 border">
                       <i class="fa-solid fa-truck-fast text-orange fs-5"></i>
                       <div class="lh-sm">
-                        <div class="fw-bold small text-dark">Super Fast</div>
-                        <span class="text-muted" style="font-size: 0.75rem;">30-min express</span>
+                        <div class="fw-bold small text-dark">{{ 'product.freeDelivery' | translate }}</div>
+                        <span class="text-muted" style="font-size: 0.75rem;">{{ 'product.freeDeliveryDesc' | translate }}</span>
                       </div>
                     </div>
                   </div>
@@ -133,8 +135,8 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
                     <div class="d-flex align-items-center gap-2 p-2 bg-white rounded-3 border">
                       <i class="fa-solid fa-shield-halved text-success fs-5"></i>
                       <div class="lh-sm">
-                        <div class="fw-bold small text-dark">Fresh Promise</div>
-                        <span class="text-muted" style="font-size: 0.75rem;">100% Quality guarantee</span>
+                        <div class="fw-bold small text-dark">{{ 'home.feature2Title' | translate }}</div>
+                        <span class="text-muted" style="font-size: 0.75rem;">{{ 'home.feature2Desc' | translate }}</span>
                       </div>
                     </div>
                   </div>
@@ -142,8 +144,8 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
                     <div class="d-flex align-items-center gap-2 p-2 bg-white rounded-3 border">
                       <i class="fa-solid fa-credit-card text-primary fs-5"></i>
                       <div class="lh-sm">
-                        <div class="fw-bold small text-dark">Secure Pay</div>
-                        <span class="text-muted" style="font-size: 0.75rem;">Cash or Visa</span>
+                        <div class="fw-bold small text-dark">{{ 'product.securePayment' | translate }}</div>
+                        <span class="text-muted" style="font-size: 0.75rem;">{{ 'product.securePaymentDesc' | translate }}</span>
                       </div>
                     </div>
                   </div>
@@ -158,11 +160,11 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
             <div class="related-section mt-5 pt-4 border-top">
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                  <h3 class="fw-bold text-dark m-0">You May Also Like</h3>
-                  <p class="text-muted small m-0">Similar items handpicked for you</p>
+                  <h3 class="fw-bold text-dark m-0">{{ 'home.trendingTitle' | translate }}</h3>
+                  <p class="text-muted small m-0">{{ 'home.trendingSubtitle' | translate }}</p>
                 </div>
                 <a routerLink="/shop" class="btn btn-sm btn-outline-secondary rounded-pill px-3 fw-semibold">
-                  View All <i class="fa-solid fa-arrow-right ms-1"></i>
+                  {{ 'shop.allCategories' | translate }} <i class="fa-solid fa-arrow-right ms-1"></i>
                 </a>
               </div>
 
@@ -179,11 +181,11 @@ import { ProductCardComponent } from '../../../shared/components/product-card/pr
           <!-- Not Found State -->
           <div class="card border-0 shadow-sm rounded-4 text-center py-5">
             <i class="fa-solid fa-triangle-exclamation text-warning fs-1 mb-3"></i>
-            <h4 class="fw-bold">Product Not Found</h4>
-            <p class="text-muted small mb-4">The item you are looking for does not exist or has been removed.</p>
+            <h4 class="fw-bold">{{ 'shop.emptyTitle' | translate }}</h4>
+            <p class="text-muted small mb-4">{{ 'shop.emptyDesc' | translate }}</p>
             <div>
               <a routerLink="/shop" class="btn btn-orange rounded-pill px-4 py-2 fw-semibold">
-                Back to Catalog
+                {{ 'product.backToCatalog' | translate }}
               </a>
             </div>
           </div>
@@ -218,6 +220,7 @@ export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private shopService = inject(ShopService);
   private basketService = inject(BasketService);
+  private lang = inject(LanguageService);
 
   product = signal<Product | null>(null);
   relatedProducts = signal<Product[]>([]);
@@ -283,10 +286,15 @@ export class ProductDetailComponent implements OnInit {
 
   getButtonText(): string {
     const prod = this.product();
-    if (!prod) return 'Add to Cart';
+    if (!prod) return this.lang.t('product.addToCart');
     const basket = this.basketService.basket();
     const existing = basket?.items.find(i => i.id === prod.id);
-    return existing ? `Add More (${existing.quantity} in cart)` : 'Add to Cart';
+    if (existing) {
+      return this.lang.isArabic()
+        ? `أضف المزيد (${existing.quantity} بالسلة)`
+        : `Add More (${existing.quantity} in cart)`;
+    }
+    return this.lang.t('product.addToCart');
   }
 
   private readonly FALLBACK_IMG = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 24 24' fill='none' stroke='%23ff5a00' stroke-width='1.5'%3E%3Crect width='18' height='18' x='3' y='3' rx='2' stroke='%23cbd5e1'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5' stroke='%23ff5a00'/%3E%3Cpath d='m21 15-5-5L5 21' stroke='%2394a3b8'/%3E%3C/svg%3E";

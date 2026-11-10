@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { BasketItem } from '../../core/models/basket.model';
 import { BasketService } from '../../core/services/basket.service';
 import { ToastService } from '../../core/services/toast.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslatePipe],
   template: `
     <div class="cart-page py-5">
       <div class="container-xl">
@@ -18,15 +19,15 @@ import { ToastService } from '../../core/services/toast.service';
           <div>
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb mb-1 small text-muted">
-                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
-                <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">Shopping Basket</li>
+                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">{{ 'shop.breadcrumbHome' | translate }}</a></li>
+                <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">{{ 'cart.title' | translate }}</li>
               </ol>
             </nav>
-            <h2 class="fw-bold m-0 text-dark">Your Shopping Basket</h2>
+            <h2 class="fw-bold m-0 text-dark">{{ 'cart.title' | translate }}</h2>
           </div>
           @if (basketService.itemCount() > 0) {
             <span class="badge bg-orange text-white px-3 py-2 rounded-pill fs-6 fw-semibold">
-              {{ basketService.itemCount() }} {{ basketService.itemCount() === 1 ? 'item' : 'items' }}
+              {{ basketService.itemCount() }} {{ 'cart.items' | translate }}
             </span>
           }
         </div>
@@ -37,9 +38,9 @@ import { ToastService } from '../../core/services/toast.service';
             <div class="col-lg-8">
               <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                 <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                  <h6 class="fw-bold m-0 text-dark">Selected Items</h6>
+                  <h6 class="fw-bold m-0 text-dark">{{ 'cart.title' | translate }}</h6>
                   <button class="btn btn-sm text-danger btn-link text-decoration-none fw-semibold p-0" (click)="clearBasket()">
-                    <i class="fa-regular fa-trash-can me-1"></i> Clear basket
+                    <i class="fa-regular fa-trash-can me-1"></i> {{ 'cart.clearCart' | translate }}
                   </button>
                 </div>
                 <div class="card-body p-0">
@@ -47,11 +48,11 @@ import { ToastService } from '../../core/services/toast.service';
                     <table class="table table-borderless align-middle mb-0">
                       <thead class="bg-light text-muted small text-uppercase">
                         <tr>
-                          <th class="ps-4 py-3">Product</th>
-                          <th class="py-3">Price</th>
-                          <th class="py-3 text-center">Quantity</th>
-                          <th class="py-3">Total</th>
-                          <th class="pe-4 py-3 text-end">Action</th>
+                          <th class="ps-4 py-3">{{ 'invoice.product' | translate }}</th>
+                          <th class="py-3">{{ 'invoice.price' | translate }}</th>
+                          <th class="py-3 text-center">{{ 'invoice.qty' | translate }}</th>
+                          <th class="py-3">{{ 'invoice.total' | translate }}</th>
+                          <th class="pe-4 py-3 text-end">{{ 'cart.remove' | translate }}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -111,7 +112,7 @@ import { ToastService } from '../../core/services/toast.service';
                               <button 
                                 class="btn btn-sm btn-outline-danger rounded-circle p-0 d-inline-flex align-items-center justify-content-center shadow-xs"
                                 style="width: 32px; height: 32px;"
-                                title="Remove item"
+                                [title]="'cart.remove' | translate"
                                 (click)="removeItem(item.id)">
                                 <i class="fa-solid fa-xmark"></i>
                               </button>
@@ -124,7 +125,7 @@ import { ToastService } from '../../core/services/toast.service';
                 </div>
                 <div class="card-footer bg-white py-3 px-4 d-flex justify-content-between align-items-center">
                   <a routerLink="/shop" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold btn-sm">
-                    <i class="fa-solid fa-arrow-left me-2"></i>Continue Shopping
+                    <i class="fa-solid fa-arrow-left me-2"></i>{{ 'cart.continueShopping' | translate }}
                   </a>
                 </div>
               </div>
@@ -134,22 +135,22 @@ import { ToastService } from '../../core/services/toast.service';
                 <div class="col-sm-4">
                   <div class="card border-0 shadow-xs rounded-4 p-3 bg-white text-center">
                     <i class="fa-solid fa-truck-fast text-orange fs-4 mb-2"></i>
-                    <h6 class="fw-bold small mb-1">Fast Delivery</h6>
-                    <span class="text-muted" style="font-size: 0.75rem;">Delivered within 30-45 minutes</span>
+                    <h6 class="fw-bold small mb-1">{{ 'product.freeDelivery' | translate }}</h6>
+                    <span class="text-muted" style="font-size: 0.75rem;">{{ 'product.freeDeliveryDesc' | translate }}</span>
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="card border-0 shadow-xs rounded-4 p-3 bg-white text-center">
                     <i class="fa-solid fa-shield-halved text-success fs-4 mb-2"></i>
-                    <h6 class="fw-bold small mb-1">Secure Checkout</h6>
-                    <span class="text-muted" style="font-size: 0.75rem;">256-Bit SSL Encryption</span>
+                    <h6 class="fw-bold small mb-1">{{ 'product.securePayment' | translate }}</h6>
+                    <span class="text-muted" style="font-size: 0.75rem;">{{ 'product.securePaymentDesc' | translate }}</span>
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="card border-0 shadow-xs rounded-4 p-3 bg-white text-center">
                     <i class="fa-solid fa-rotate-left text-primary fs-4 mb-2"></i>
-                    <h6 class="fw-bold small mb-1">Easy Return</h6>
-                    <span class="text-muted" style="font-size: 0.75rem;">14 days hassle-free refund</span>
+                    <h6 class="fw-bold small mb-1">{{ 'home.feature4Title' | translate }}</h6>
+                    <span class="text-muted" style="font-size: 0.75rem;">{{ 'home.feature4Desc' | translate }}</span>
                   </div>
                 </div>
               </div>
@@ -158,7 +159,7 @@ import { ToastService } from '../../core/services/toast.service';
             <!-- Order Summary Card -->
             <div class="col-lg-4">
               <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
-                <h5 class="fw-bold text-dark mb-3">Order Summary</h5>
+                <h5 class="fw-bold text-dark mb-3">{{ 'checkout.orderSummary' | translate }}</h5>
 
                 <!-- Promo code input -->
                 <div class="mb-4">
@@ -188,14 +189,14 @@ import { ToastService } from '../../core/services/toast.service';
                 <!-- Price breakdown -->
                 <div class="price-breakdown border-bottom pb-3 mb-3">
                   <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Subtotal</span>
+                    <span class="text-muted">{{ 'cart.subtotal' | translate }}</span>
                     <span class="fw-semibold text-dark">{{ basketService.basketTotal().subtotal | currency }}</span>
                   </div>
                   <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Delivery</span>
+                    <span class="text-muted">{{ 'cart.shipping' | translate }}</span>
                     <span class="fw-semibold text-dark">
                       @if (basketService.basketTotal().shipping === 0) {
-                        <span class="text-success fw-bold">FREE</span>
+                        <span class="text-success fw-bold">{{ 'cart.freeShipping' | translate }}</span>
                       } @else {
                         {{ basketService.basketTotal().shipping | currency }}
                       }
@@ -211,7 +212,7 @@ import { ToastService } from '../../core/services/toast.service';
 
                 <!-- Total -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                  <span class="fs-5 fw-bold text-dark">Total</span>
+                  <span class="fs-5 fw-bold text-dark">{{ 'checkout.total' | translate }}</span>
                   <span class="fs-4 fw-black text-orange">
                     {{ (basketService.basketTotal().total - (discountApplied ? 5 : 0)) | currency }}
                   </span>
@@ -219,13 +220,13 @@ import { ToastService } from '../../core/services/toast.service';
 
                 <!-- Checkout CTA -->
                 <a routerLink="/checkout" class="btn btn-orange btn-lg w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2 mb-3">
-                  <span>Proceed to Checkout</span>
+                  <span>{{ 'cart.checkoutBtn' | translate }}</span>
                   <i class="fa-solid fa-arrow-right"></i>
                 </a>
 
                 <div class="text-center">
                   <span class="text-muted small">
-                    <i class="fa-solid fa-lock text-muted me-1"></i> Guaranteed safe & secure checkout
+                    <i class="fa-solid fa-lock text-muted me-1"></i> {{ 'product.securePayment' | translate }}
                   </span>
                 </div>
               </div>
@@ -237,13 +238,13 @@ import { ToastService } from '../../core/services/toast.service';
             <div class="empty-cart-icon bg-light rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width: 110px; height: 110px;">
               <i class="fa-solid fa-basket-shopping fs-1 text-orange opacity-75"></i>
             </div>
-            <h3 class="fw-bold mb-2">Your Basket is Empty</h3>
+            <h3 class="fw-bold mb-2">{{ 'cart.emptyTitle' | translate }}</h3>
             <p class="text-muted mx-auto mb-4" style="max-width: 440px;">
-              Looks like you haven't added anything to your cart yet. Explore our delicious meals, fresh groceries, and great deals!
+              {{ 'cart.emptyDesc' | translate }}
             </p>
             <div>
               <a routerLink="/shop" class="btn btn-orange btn-lg rounded-pill px-5 fw-bold shadow-sm">
-                <i class="fa-solid fa-bag-shopping me-2"></i>Start Shopping
+                <i class="fa-solid fa-bag-shopping me-2"></i>{{ 'cart.startShopping' | translate }}
               </a>
             </div>
           </div>

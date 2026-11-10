@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Basket, BasketItem, BasketTotals, CustomerBasket } from '../models/basket.model';
 import { DeliveryMethod } from '../models/order.model';
 import { Product } from '../models/product.model';
+import { LanguageService } from './language.service';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -12,6 +13,7 @@ import { ToastService } from './toast.service';
 export class BasketService {
   private http = inject(HttpClient);
   private toast = inject(ToastService);
+  private lang = inject(LanguageService);
   private baseUrl = environment.apiUrl;
 
   basket = signal<CustomerBasket | null>(null);
@@ -157,7 +159,10 @@ export class BasketService {
 
     currentBasket.items = items;
     this.setBasket(currentBasket);
-    this.toast.success(`"${product.name}" added to cart!`);
+    const msg = this.lang.isArabic()
+      ? `تمت إضافة "${product.name}" إلى السلة بنجاح!`
+      : `"${product.name}" added to cart!`;
+    this.toast.success(msg);
     this.toggleDrawer(true);
   }
 

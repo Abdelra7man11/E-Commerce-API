@@ -3,11 +3,12 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Order } from '../../core/models/order.model';
 import { OrdersService } from '../../core/services/orders.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   template: `
     <div class="orders-page py-5">
       <div class="container-xl">
@@ -16,16 +17,16 @@ import { OrdersService } from '../../core/services/orders.service';
           <div>
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb mb-1 small text-muted">
-                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
-                <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">My Orders</li>
+                <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">{{ 'shop.breadcrumbHome' | translate }}</a></li>
+                <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">{{ 'orders.title' | translate }}</li>
               </ol>
             </nav>
-            <h2 class="fw-bold m-0 text-dark">My Orders History</h2>
-            <p class="text-muted small m-0">Track and review your past meals & grocery deliveries</p>
+            <h2 class="fw-bold m-0 text-dark">{{ 'orders.title' | translate }}</h2>
+            <p class="text-muted small m-0">{{ 'orders.subtitle' | translate }}</p>
           </div>
           @if (orders().length > 0) {
             <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
-              Total Orders: {{ orders().length }}
+              {{ 'orders.title' | translate }}: {{ orders().length }}
             </span>
           }
         </div>
@@ -42,13 +43,13 @@ import { OrdersService } from '../../core/services/orders.service';
               <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light text-muted small text-uppercase">
                   <tr>
-                    <th class="ps-4 py-3">Order #</th>
-                    <th class="py-3">Date</th>
-                    <th class="py-3">Items</th>
-                    <th class="py-3">Delivery Method</th>
-                    <th class="py-3">Total</th>
-                    <th class="py-3">Status</th>
-                    <th class="pe-4 py-3 text-end">Action</th>
+                    <th class="ps-4 py-3">{{ 'orders.orderNum' | translate }}</th>
+                    <th class="py-3">{{ 'invoice.date' | translate }}</th>
+                    <th class="py-3">{{ 'cart.items' | translate }}</th>
+                    <th class="py-3">{{ 'checkout.stepDelivery' | translate }}</th>
+                    <th class="py-3">{{ 'invoice.total' | translate }}</th>
+                    <th class="py-3">{{ 'success.orderStatus' | translate }}</th>
+                    <th class="pe-4 py-3 text-end">{{ 'orders.viewDetails' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -63,7 +64,7 @@ import { OrdersService } from '../../core/services/orders.service';
                       </td>
                       <td class="py-3 small">
                         <span class="badge bg-light text-dark border rounded-pill px-2.5 py-1">
-                          {{ order.items ? order.items.length : 0 }} items
+                          {{ order.items ? order.items.length : 0 }} {{ 'cart.items' | translate }}
                         </span>
                       </td>
                       <td class="py-3 small text-muted">
@@ -79,7 +80,7 @@ import { OrdersService } from '../../core/services/orders.service';
                       </td>
                       <td class="pe-4 py-3 text-end">
                         <a [routerLink]="['/orders', order.id]" class="btn btn-sm btn-outline-secondary rounded-pill px-3 fw-semibold">
-                          View Order <i class="fa-solid fa-arrow-right ms-1"></i>
+                          {{ 'orders.viewDetails' | translate }} <i class="fa-solid fa-arrow-right ms-1"></i>
                         </a>
                       </td>
                     </tr>
@@ -94,13 +95,13 @@ import { OrdersService } from '../../core/services/orders.service';
             <div class="empty-icon bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
               <i class="fa-solid fa-clock-rotate-left fs-2 text-muted"></i>
             </div>
-            <h4 class="fw-bold mb-1">No Orders Yet</h4>
+            <h4 class="fw-bold mb-1">{{ 'orders.emptyTitle' | translate }}</h4>
             <p class="text-muted small mx-auto mb-4" style="max-width: 400px;">
-              You haven't placed any orders yet. Discover our fresh catalog and treat yourself!
+              {{ 'orders.emptyDesc' | translate }}
             </p>
             <div>
               <a routerLink="/shop" class="btn btn-orange rounded-pill px-4 py-2.5 fw-bold shadow-sm">
-                <i class="fa-solid fa-bag-shopping me-2"></i>Start Shopping
+                <i class="fa-solid fa-bag-shopping me-2"></i>{{ 'cart.startShopping' | translate }}
               </a>
             </div>
           </div>

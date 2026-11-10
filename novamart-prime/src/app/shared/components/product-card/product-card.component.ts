@@ -3,11 +3,12 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { BasketService } from '../../../core/services/basket.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   template: `
     <div class="card h-100 tp-card border-0 overflow-hidden position-relative group">
       <!-- Badge for Category / Type -->
@@ -51,7 +52,7 @@ import { BasketService } from '../../../core/services/basket.service';
 
         <div class="d-flex align-items-center justify-content-between pt-2 border-top">
           <div>
-            <span class="text-muted small d-block" style="font-size: 0.7rem;">PRICE</span>
+            <span class="text-muted small d-block" style="font-size: 0.7rem;">{{ 'product.price' | translate }}</span>
             <span class="fw-bolder fs-5" style="color: var(--tp-primary);">
               {{ product.price | currency }}
             </span>
@@ -60,7 +61,7 @@ import { BasketService } from '../../../core/services/basket.service';
           <button class="btn btn-tp-primary rounded-circle p-2 d-flex align-items-center justify-content-center"
                   style="width: 42px; height: 42px;"
                   (click)="addToCart($event)"
-                  title="Add to cart">
+                  [title]="'product.addToCart' | translate">
             <i class="fa-solid fa-plus fs-6"></i>
           </button>
         </div>

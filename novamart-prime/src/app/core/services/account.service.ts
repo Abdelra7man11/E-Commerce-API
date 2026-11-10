@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Address, LoginDto, RegisterDto, User } from '../models/user.model';
+import { LanguageService } from './language.service';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -13,6 +14,7 @@ export class AccountService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private toast = inject(ToastService);
+  private lang = inject(LanguageService);
   private baseUrl = environment.apiUrl;
 
   currentUser = signal<User | null>(null);
@@ -73,7 +75,10 @@ export class AccountService {
           localStorage.setItem('tp_token', user.token);
           localStorage.setItem('tp_user', JSON.stringify(user));
           this.currentUser.set(user);
-          this.toast.success(`Welcome back, ${user.displayName}!`);
+          const welcomeMsg = this.lang.isArabic()
+            ? `أهلاً بك مجدداً، ${user.displayName}!`
+            : `Welcome back, ${user.displayName}!`;
+          this.toast.success(welcomeMsg);
         }
         return user;
       })
@@ -87,7 +92,10 @@ export class AccountService {
           localStorage.setItem('tp_token', user.token);
           localStorage.setItem('tp_user', JSON.stringify(user));
           this.currentUser.set(user);
-          this.toast.success(`Account created successfully! Welcome, ${user.displayName}`);
+          const regMsg = this.lang.isArabic()
+            ? `تم إنشاء الحساب بنجاح! أهلاً بك، ${user.displayName}`
+            : `Account created successfully! Welcome, ${user.displayName}`;
+          this.toast.success(regMsg);
         }
         return user;
       })
@@ -98,7 +106,10 @@ export class AccountService {
     localStorage.removeItem('tp_token');
     localStorage.removeItem('tp_user');
     this.currentUser.set(null);
-    this.toast.info('Logged out safely');
+    const logoutMsg = this.lang.isArabic()
+      ? 'تم تسجيل الخروج بأمان'
+      : 'Logged out safely';
+    this.toast.info(logoutMsg);
     this.router.navigateByUrl('/');
   }
 

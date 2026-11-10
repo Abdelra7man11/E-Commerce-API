@@ -3,20 +3,21 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Order } from '../../../core/models/order.model';
 import { OrdersService } from '../../../core/services/orders.service';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   template: `
     <div class="order-detail-page py-5">
       <div class="container-xl">
         <!-- Breadcrumb (Hidden during print) -->
         <nav aria-label="breadcrumb" class="mb-4 no-print">
           <ol class="breadcrumb small">
-            <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
-            <li class="breadcrumb-item"><a routerLink="/orders" class="text-decoration-none text-muted">Orders</a></li>
-            <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">Order Invoice</li>
+            <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">{{ 'shop.breadcrumbHome' | translate }}</a></li>
+            <li class="breadcrumb-item"><a routerLink="/orders" class="text-decoration-none text-muted">{{ 'nav.orders' | translate }}</a></li>
+            <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">{{ 'invoice.title' | translate }}</li>
           </ol>
         </nav>
 
@@ -37,12 +38,12 @@ import { OrdersService } from '../../../core/services/orders.service';
                   </div>
                   <div>
                     <h4 class="fw-black m-0" style="color: #0f172a; font-size: 1.3rem;">Nova<span style="color: #ff5a00;">Mart</span> PRIME</h4>
-                    <small class="text-muted" style="font-size: 0.8rem;">Official Customer Tax Invoice</small>
+                    <small class="text-muted" style="font-size: 0.8rem;">{{ 'invoice.title' | translate }}</small>
                   </div>
                 </div>
                 <div class="text-end">
-                  <div class="fw-bold fs-6" style="color: #0f172a;">Order #{{ order()!.id }}</div>
-                  <div class="small text-muted">Issued on {{ order()!.orderDate | date:'mediumDate' }}</div>
+                  <div class="fw-bold fs-6" style="color: #0f172a;">{{ 'orders.orderNum' | translate }} {{ order()!.id }}</div>
+                  <div class="small text-muted">{{ 'invoice.date' | translate }}: {{ order()!.orderDate | date:'mediumDate' }}</div>
                 </div>
               </div>
             </div>
@@ -53,17 +54,17 @@ import { OrdersService } from '../../../core/services/orders.service';
                 <span class="badge rounded-pill px-3 py-1.5 fw-bold mb-2" [ngClass]="getStatusBadgeClass(order()!.status)">
                   {{ order()!.status }}
                 </span>
-                <h3 class="fw-black text-dark m-0">Order Invoice</h3>
-                <div class="text-muted small mt-1 font-monospace">Ref: {{ order()!.id }}</div>
+                <h3 class="fw-black text-dark m-0">{{ 'invoice.title' | translate }}</h3>
+                <div class="text-muted small mt-1 font-monospace">{{ 'success.orderId' | translate }} {{ order()!.id }}</div>
               </div>
 
               <!-- Action buttons (Hidden on Print) -->
               <div class="d-flex align-items-center gap-2 no-print">
                 <button class="btn btn-outline-secondary rounded-pill px-3 py-2 btn-sm fw-semibold" (click)="printInvoice()">
-                  <i class="fa-solid fa-print me-1.5"></i> Print Invoice
+                  <i class="fa-solid fa-print me-1.5"></i> {{ 'success.printInvoice' | translate }}
                 </button>
                 <a routerLink="/orders" class="btn btn-light border rounded-pill px-3 py-2 btn-sm fw-semibold text-muted">
-                  <i class="fa-solid fa-arrow-left me-1"></i> Back to Orders
+                  <i class="fa-solid fa-arrow-left me-1"></i> {{ 'nav.myOrders' | translate }}
                 </a>
               </div>
             </div>
@@ -72,25 +73,25 @@ import { OrdersService } from '../../../core/services/orders.service';
               <!-- Meta Info Grid -->
               <div class="row g-4 mb-5 pb-4 border-bottom">
                 <div class="col-sm-6 col-lg-3">
-                  <div class="small text-muted fw-bold text-uppercase mb-1">Order Date</div>
+                  <div class="small text-muted fw-bold text-uppercase mb-1">{{ 'invoice.date' | translate }}</div>
                   <div class="fw-semibold text-dark">{{ order()!.orderDate | date:'mediumDate' }}</div>
                   <div class="small text-muted">{{ order()!.orderDate | date:'shortTime' }}</div>
                 </div>
 
                 <div class="col-sm-6 col-lg-3">
-                  <div class="small text-muted fw-bold text-uppercase mb-1">Customer</div>
+                  <div class="small text-muted fw-bold text-uppercase mb-1">{{ 'invoice.customer' | translate }}</div>
                   <div class="fw-semibold text-dark">{{ order()!.shipToAddress.firstName }} {{ order()!.shipToAddress.lastName }}</div>
                   <div class="small text-muted text-break">{{ order()!.buyerEmail }}</div>
                 </div>
 
                 <div class="col-sm-6 col-lg-3">
-                  <div class="small text-muted fw-bold text-uppercase mb-1">Shipping To</div>
+                  <div class="small text-muted fw-bold text-uppercase mb-1">{{ 'invoice.address' | translate }}</div>
                   <div class="fw-semibold text-dark">{{ order()!.shipToAddress.street }}</div>
                   <div class="small text-muted">{{ order()!.shipToAddress.city }}, {{ order()!.shipToAddress.country }}</div>
                 </div>
 
                 <div class="col-sm-6 col-lg-3">
-                  <div class="small text-muted fw-bold text-uppercase mb-1">Payment & Delivery</div>
+                  <div class="small text-muted fw-bold text-uppercase mb-1">{{ 'invoice.payment' | translate }}</div>
                   <div class="fw-semibold text-dark">{{ order()!.deliveryMethod }}</div>
                   <div class="small text-orange fw-bold mt-1 d-flex align-items-center gap-1.5">
                     <i [class]="getPaymentIcon()"></i>
@@ -100,15 +101,15 @@ import { OrdersService } from '../../../core/services/orders.service';
               </div>
 
               <!-- Ordered Items Table -->
-              <h5 class="fw-bold text-dark mb-3">Order Items</h5>
+              <h5 class="fw-bold text-dark mb-3">{{ 'cart.title' | translate }}</h5>
               <div class="table-responsive mb-4">
                 <table class="table align-middle">
                   <thead class="bg-light text-muted small text-uppercase">
                     <tr>
-                      <th class="ps-3 py-2">Item</th>
-                      <th class="py-2">Price</th>
-                      <th class="py-2 text-center">Quantity</th>
-                      <th class="pe-3 py-2 text-end">Total</th>
+                      <th class="ps-3 py-2">{{ 'invoice.product' | translate }}</th>
+                      <th class="py-2">{{ 'invoice.price' | translate }}</th>
+                      <th class="py-2 text-center">{{ 'invoice.qty' | translate }}</th>
+                      <th class="pe-3 py-2 text-end">{{ 'invoice.total' | translate }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -134,16 +135,16 @@ import { OrdersService } from '../../../core/services/orders.service';
                 <div class="col-md-5">
                   <div class="bg-light p-4 rounded-4 border">
                     <div class="d-flex justify-content-between mb-2 small">
-                      <span class="text-muted">Subtotal</span>
+                      <span class="text-muted">{{ 'invoice.subtotal' | translate }}</span>
                       <span class="fw-semibold text-dark">{{ order()!.subtotal | currency }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2 small">
-                      <span class="text-muted">Shipping & Handling</span>
+                      <span class="text-muted">{{ 'invoice.shipping' | translate }}</span>
                       <span class="fw-semibold text-dark">{{ order()!.deliveryCost | currency }}</span>
                     </div>
                     <hr class="my-3 opacity-25">
                     <div class="d-flex justify-content-between align-items-center">
-                      <span class="fw-bold fs-5 text-dark">Grand Total</span>
+                      <span class="fw-bold fs-5 text-dark">{{ 'invoice.grandTotal' | translate }}</span>
                       <span class="fw-black fs-4 text-orange">{{ order()!.total | currency }}</span>
                     </div>
                   </div>
@@ -152,7 +153,7 @@ import { OrdersService } from '../../../core/services/orders.service';
 
               <!-- Official Print Footer (Visible ONLY on print) -->
               <div class="d-none print-only border-top pt-4 mt-5 text-center text-muted small">
-                <p class="mb-1 fw-bold" style="color: #0f172a;">Thank you for shopping with NovaMart Prime!</p>
+                <p class="mb-1 fw-bold" style="color: #0f172a;">{{ 'invoice.thankYou' | translate }}</p>
                 <p class="mb-0" style="font-size: 0.8rem;">This is a computer-generated tax invoice. For support or inquiries, please contact support&#64;novamart.com</p>
               </div>
             </div>
@@ -164,8 +165,8 @@ import { OrdersService } from '../../../core/services/orders.service';
             <h4 class="fw-bold">Order Not Found</h4>
             <p class="text-muted small mb-4">We could not locate this order in your account.</p>
             <div>
-              <a routerLink="/orders" class="btn btn-orange rounded-pill px-4 fw-semibold">
-                Back to Orders
+              <a routerLink="/orders" class="btn btn-orange rounded-pill px-4 py-2 fw-semibold">
+                {{ 'nav.myOrders' | translate }}
               </a>
             </div>
           </div>

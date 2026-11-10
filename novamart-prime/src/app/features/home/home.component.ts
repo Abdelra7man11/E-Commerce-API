@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { Brand, Product, ProductType, ShopParams } from '../../core/models/product.model';
 import { ShopService } from '../../core/services/shop.service';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, ProductCardComponent],
+  imports: [CommonModule, RouterLink, ProductCardComponent, TranslatePipe],
   template: `
     <!-- Hero Banner -->
     <section class="hero-section text-white position-relative overflow-hidden py-5">
@@ -16,20 +17,20 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
         <div class="row align-items-center g-5">
           <div class="col-lg-7">
             <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 fs-7">
-              🔥 SPECIAL LAUNCH OFFER · 25% OFF
+              {{ 'home.heroBadge' | translate }}
             </span>
             <h1 class="display-3 fw-bolder mb-4 hero-title">
-              Savor The Finest Selections Delivered <span style="color: #ff8c42;">To Your Door</span>
+              {{ 'home.heroTitle' | translate }}
             </h1>
             <p class="lead text-light mb-4 opacity-90 fs-5 lh-base">
-              Explore authentic world-class collections, gourmet creations, and premium pantry essentials curated with passion and quality.
+              {{ 'home.heroSubtitle' | translate }}
             </p>
             <div class="d-flex flex-wrap gap-3">
               <a routerLink="/shop" class="btn btn-orange btn-lg rounded-pill px-4 py-3 fw-bold shadow-sm">
-                <i class="fa-solid fa-basket-shopping me-2"></i> Explore Catalog
+                <i class="fa-solid fa-basket-shopping me-2"></i> {{ 'home.shopNow' | translate }}
               </a>
               <a routerLink="/shop" [queryParams]="{sort: 'priceAsc'}" class="btn btn-outline-light btn-lg rounded-pill px-4 py-3 fw-semibold">
-                <i class="fa-solid fa-tag me-2"></i> Best Deals
+                <i class="fa-solid fa-tag me-2"></i> {{ 'home.browseCategories' | translate }}
               </a>
             </div>
           </div>
@@ -46,7 +47,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                   </div>
                   <div>
                     <h6 class="mb-0 fw-bold">Ultra Fast 30m</h6>
-                    <small class="text-muted">Door-to-door tracking</small>
+                    <small class="text-muted">{{ 'home.feature1Title' | translate }}</small>
                   </div>
                 </div>
               </div>
@@ -65,8 +66,8 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
               <i class="fa-solid fa-truck-fast"></i>
             </div>
             <div>
-              <h6 class="fw-bold mb-0">Express Delivery</h6>
-              <small class="text-muted">Direct from local kitchens</small>
+              <h6 class="fw-bold mb-0">{{ 'home.feature1Title' | translate }}</h6>
+              <small class="text-muted">{{ 'home.feature1Desc' | translate }}</small>
             </div>
           </div>
           <div class="col-md-3 col-6 d-flex align-items-center gap-3">
@@ -74,8 +75,8 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
               <i class="fa-solid fa-seedling"></i>
             </div>
             <div>
-              <h6 class="fw-bold mb-0">100% Fresh Guaranteed</h6>
-              <small class="text-muted">Sourced every morning</small>
+              <h6 class="fw-bold mb-0">{{ 'home.feature2Title' | translate }}</h6>
+              <small class="text-muted">{{ 'home.feature2Desc' | translate }}</small>
             </div>
           </div>
           <div class="col-md-3 col-6 d-flex align-items-center gap-3">
@@ -83,8 +84,8 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
               <i class="fa-solid fa-shield-halved"></i>
             </div>
             <div>
-              <h6 class="fw-bold mb-0">Secure Checkout</h6>
-              <small class="text-muted">Encrypted payments</small>
+              <h6 class="fw-bold mb-0">{{ 'home.feature3Title' | translate }}</h6>
+              <small class="text-muted">{{ 'home.feature3Desc' | translate }}</small>
             </div>
           </div>
           <div class="col-md-3 col-6 d-flex align-items-center gap-3">
@@ -92,8 +93,8 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
               <i class="fa-solid fa-headset"></i>
             </div>
             <div>
-              <h6 class="fw-bold mb-0">24/7 Prime Care</h6>
-              <small class="text-muted">Instant customer support</small>
+              <h6 class="fw-bold mb-0">{{ 'home.feature4Title' | translate }}</h6>
+              <small class="text-muted">{{ 'home.feature4Desc' | translate }}</small>
             </div>
           </div>
         </div>
@@ -105,10 +106,10 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
       <div class="container-xl">
         <div class="d-flex align-items-center justify-content-between mb-4">
           <div>
-            <span class="tp-badge mb-2 d-inline-block">Categories</span>
-            <h2 class="fw-bolder mb-0 text-dark">Explore By Categories</h2>
+            <span class="tp-badge mb-2 d-inline-block">{{ 'shop.categories' | translate }}</span>
+            <h2 class="fw-bolder mb-0 text-dark">{{ 'home.categoriesTitle' | translate }}</h2>
           </div>
-          <a routerLink="/shop" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold">View All <i class="fa-solid fa-arrow-right ms-1"></i></a>
+          <a routerLink="/shop" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold">{{ 'shop.allCategories' | translate }} <i class="fa-solid fa-arrow-right ms-1"></i></a>
         </div>
 
         <div class="row g-3">
@@ -126,7 +127,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
                   }
                 </div>
                 <h5 class="fw-bold text-dark mb-1">{{ type.name }}</h5>
-                <small class="text-muted">Browse authentic selections</small>
+                <small class="text-muted">{{ 'home.categoriesSubtitle' | translate }}</small>
               </a>
             </div>
           }
@@ -138,9 +139,9 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
     <section class="py-5 border-top border-bottom" style="background-color: var(--tp-surface);">
       <div class="container-xl">
         <div class="text-center mb-5 mx-auto" style="max-width: 650px;">
-          <span class="tp-badge mb-2 d-inline-block">Trending Now</span>
-          <h2 class="fw-bolder text-dark">Handpicked Selections</h2>
-          <p class="text-muted">Top customer favorites and best sellers, delivered fresh directly to your door.</p>
+          <span class="tp-badge mb-2 d-inline-block">{{ 'home.trendingTitle' | translate }}</span>
+          <h2 class="fw-bolder text-dark">{{ 'home.trendingTitle' | translate }}</h2>
+          <p class="text-muted">{{ 'home.trendingSubtitle' | translate }}</p>
         </div>
 
         @if (isLoading()) {
@@ -156,9 +157,9 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
             <div class="empty-icon-circle mx-auto mb-3 bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
               <i class="fa-solid fa-plug-circle-xmark fs-2"></i>
             </div>
-            <h4 class="fw-bold mb-1 text-danger">Server Offline / Connection Error</h4>
+            <h4 class="fw-bold mb-1 text-danger">{{ 'shop.connectionErrorTitle' | translate }}</h4>
             <p class="text-muted small mx-auto mb-3" style="max-width: 440px;">
-              تعذر الاتصال بخادم الـ ASP.NET Core API المباشر (https://localhost:7112). تأكد من تشغيل الباك إند وصحة الداتا بيز.
+              {{ 'shop.connectionErrorDesc' | translate }}
             </p>
           </div>
         } @else {
@@ -173,7 +174,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
 
         <div class="text-center mt-5">
           <a routerLink="/shop" class="btn btn-orange btn-lg rounded-pill px-5 fw-bold shadow-sm">
-            Discover Full Catalog ({{ totalCount() }} Items)
+            {{ 'shop.breadcrumbCatalog' | translate }} ({{ totalCount() }})
           </a>
         </div>
       </div>
@@ -186,12 +187,14 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
              style="background: linear-gradient(135deg, #0b0f19 0%, #1e293b 100%);">
           <div class="row align-items-center g-4">
             <div class="col-lg-8">
-              <span class="badge bg-orange rounded-pill px-3 py-1.5 fw-bold mb-3">NOVAMART PRIME MEMBERSHIP</span>
-              <h2 class="display-6 fw-bold mb-3">Shop Smarter & Enjoy Exclusive Rewards</h2>
-              <p class="text-secondary mb-0 fs-6 lh-base">Join over 100,000 customers enjoying lightning-fast delivery, surprise vouchers, and premium perks every single day.</p>
+              <span class="badge bg-orange rounded-pill px-3 py-1.5 fw-bold mb-3">{{ 'home.promoBadge' | translate }}</span>
+              <h2 class="display-6 fw-bold mb-3">{{ 'home.promoTitle' | translate }}</h2>
+              <p class="text-secondary mb-0 fs-6 lh-base">{{ 'home.promoSubtitle' | translate }}</p>
             </div>
             <div class="col-lg-4 text-lg-end">
-              <a routerLink="/account/register" class="btn btn-orange btn-lg rounded-pill px-4 fw-bold shadow-sm">Create Free Account</a>
+              <a routerLink="/account/register" class="btn btn-orange btn-lg rounded-pill px-4 fw-bold shadow-sm">
+                {{ 'auth.createAccount' | translate }}
+              </a>
             </div>
           </div>
         </div>

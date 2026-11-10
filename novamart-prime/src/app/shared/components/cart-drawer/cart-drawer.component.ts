@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BasketService } from '../../../core/services/basket.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-cart-drawer',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   template: `
     <!-- Backdrop -->
     @if (basketService.isDrawerOpen()) {
@@ -20,7 +21,7 @@ import { BasketService } from '../../../core/services/basket.service';
         <div class="p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
           <div class="d-flex align-items-center">
             <i class="fa-solid fa-cart-shopping fs-5 me-2" style="color: var(--tp-primary);"></i>
-            <h5 class="mb-0 fw-bold">Your Cart</h5>
+            <h5 class="mb-0 fw-bold">{{ 'cart.title' | translate }}</h5>
             <span class="badge bg-dark rounded-pill ms-2">{{ basketService.itemCount() }}</span>
           </div>
           <button class="btn btn-close" (click)="basketService.toggleDrawer(false)"></button>
@@ -67,18 +68,18 @@ import { BasketService } from '../../../core/services/basket.service';
             } @else {
               <div class="text-center py-5">
                 <i class="fa-solid fa-cart-arrow-down fs-1 text-muted mb-3 opacity-50"></i>
-                <h5 class="fw-bold text-muted">Your cart is empty</h5>
-                <p class="text-secondary small">Add delicious items from the shop to get started!</p>
+                <h5 class="fw-bold text-muted">{{ 'cart.emptyTitle' | translate }}</h5>
+                <p class="text-secondary small">{{ 'cart.emptyDesc' | translate }}</p>
                 <a routerLink="/shop" class="btn btn-tp-primary rounded-pill mt-3"
-                   (click)="basketService.toggleDrawer(false)">Start Shopping</a>
+                   (click)="basketService.toggleDrawer(false)">{{ 'cart.startShopping' | translate }}</a>
               </div>
             }
           } @else {
             <div class="text-center py-5">
               <i class="fa-solid fa-cart-plus fs-1 text-muted mb-3 opacity-50"></i>
-              <h5 class="fw-bold text-muted">No items in your cart</h5>
+              <h5 class="fw-bold text-muted">{{ 'cart.emptyTitle' | translate }}</h5>
               <a routerLink="/shop" class="btn btn-tp-primary rounded-pill mt-3"
-                 (click)="basketService.toggleDrawer(false)">Browse Products</a>
+                 (click)="basketService.toggleDrawer(false)">{{ 'cart.startShopping' | translate }}</a>
             </div>
           }
         </div>
@@ -87,21 +88,21 @@ import { BasketService } from '../../../core/services/basket.service';
         @if (basketService.basket() && basketService.itemCount() > 0) {
           <div class="p-3 border-top bg-light">
             <div class="d-flex justify-content-between mb-2">
-              <span class="text-muted">Subtotal</span>
+              <span class="text-muted">{{ 'cart.subtotal' | translate }}</span>
               <span class="fw-bold">{{ basketService.basketTotal().subtotal | currency }}</span>
             </div>
             <div class="d-flex justify-content-between mb-3 fs-5">
-              <span class="fw-bold">Total</span>
+              <span class="fw-bold">{{ 'cart.estimatedTotal' | translate }}</span>
               <span class="fw-bold" style="color: var(--tp-primary);">{{ basketService.basketTotal().total | currency }}</span>
             </div>
             <div class="d-grid gap-2">
               <a routerLink="/checkout" class="btn btn-tp-primary py-2.5 rounded-pill text-center text-decoration-none"
                  (click)="basketService.toggleDrawer(false)">
-                Proceed to Checkout <i class="fa-solid fa-arrow-right ms-1"></i>
+                {{ 'cart.checkoutBtn' | translate }} <i class="fa-solid fa-arrow-right ms-1"></i>
               </a>
               <a routerLink="/cart" class="btn btn-outline-dark rounded-pill py-2 text-center text-decoration-none"
                  (click)="basketService.toggleDrawer(false)">
-                View Full Cart
+                {{ 'nav.viewFullCart' | translate }}
               </a>
             </div>
           </div>

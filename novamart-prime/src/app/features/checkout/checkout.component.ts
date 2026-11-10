@@ -6,12 +6,14 @@ import { DeliveryMethod, OrderToCreate } from '../../core/models/order.model';
 import { AccountService } from '../../core/services/account.service';
 import { BasketService } from '../../core/services/basket.service';
 import { CheckoutService } from '../../core/services/checkout.service';
+import { LanguageService } from '../../core/services/language.service';
 import { ToastService } from '../../core/services/toast.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, TranslatePipe],
   template: `
     <div class="checkout-page py-5">
       <div class="container-xl">
@@ -19,22 +21,22 @@ import { ToastService } from '../../core/services/toast.service';
         <div class="mb-4">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-1 small text-muted">
-              <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Home</a></li>
-              <li class="breadcrumb-item"><a routerLink="/cart" class="text-decoration-none text-muted">Cart</a></li>
-              <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">Checkout</li>
+              <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">{{ 'shop.breadcrumbHome' | translate }}</a></li>
+              <li class="breadcrumb-item"><a routerLink="/cart" class="text-decoration-none text-muted">{{ 'nav.cart' | translate }}</a></li>
+              <li class="breadcrumb-item active text-orange fw-semibold" aria-current="page">{{ 'checkout.stepReview' | translate }}</li>
             </ol>
           </nav>
-          <h2 class="fw-bold m-0 text-dark">Secure Checkout</h2>
+          <h2 class="fw-bold m-0 text-dark">{{ 'checkout.title' | translate }}</h2>
         </div>
 
         @if (!basketService.basket() || basketService.basket()!.items.length === 0) {
           <div class="card border-0 shadow-sm rounded-4 text-center py-5">
             <i class="fa-solid fa-basket-shopping fs-1 text-muted mb-3"></i>
-            <h4 class="fw-bold">Your basket is empty</h4>
-            <p class="text-muted small mb-4">Please add items to your cart before proceeding to checkout.</p>
+            <h4 class="fw-bold">{{ 'cart.emptyTitle' | translate }}</h4>
+            <p class="text-muted small mb-4">{{ 'cart.emptyDesc' | translate }}</p>
             <div>
               <a routerLink="/shop" class="btn btn-orange rounded-pill px-4 fw-semibold">
-                Explore Catalog
+                {{ 'shop.breadcrumbCatalog' | translate }}
               </a>
             </div>
           </div>
@@ -51,7 +53,7 @@ import { ToastService } from '../../core/services/toast.service';
                       <span>1</span>
                     }
                   </div>
-                  <div class="step-label small fw-bold">1. Delivery Address</div>
+                  <div class="step-label small fw-bold">1. {{ 'checkout.stepAddress' | translate }}</div>
                 </div>
               </div>
               <div class="col-4">
@@ -63,7 +65,7 @@ import { ToastService } from '../../core/services/toast.service';
                       <span>2</span>
                     }
                   </div>
-                  <div class="step-label small fw-bold">2. Delivery Method</div>
+                  <div class="step-label small fw-bold">2. {{ 'checkout.stepDelivery' | translate }}</div>
                 </div>
               </div>
               <div class="col-4">
@@ -71,7 +73,7 @@ import { ToastService } from '../../core/services/toast.service';
                   <div class="step-icon mb-1">
                     <span>3</span>
                   </div>
-                  <div class="step-label small fw-bold">3. Review & Payment</div>
+                  <div class="step-label small fw-bold">3. {{ 'checkout.stepPayment' | translate }}</div>
                 </div>
               </div>
             </div>
@@ -85,7 +87,7 @@ import { ToastService } from '../../core/services/toast.service';
                 <div class="card border-0 shadow-sm rounded-4 p-4">
                   <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold m-0 text-dark">
-                      <i class="fa-solid fa-location-dot text-orange me-2"></i>Shipping Address
+                      <i class="fa-solid fa-location-dot text-orange me-2"></i>{{ 'checkout.addressTitle' | translate }}
                     </h5>
                     @if (hasSavedAddress) {
                       <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" (click)="fillWithSavedAddress()">
@@ -97,7 +99,7 @@ import { ToastService } from '../../core/services/toast.service';
                   <form [formGroup]="addressForm" (ngSubmit)="submitStep1()">
                     <div class="row g-3">
                       <div class="col-sm-6">
-                        <label class="form-label small fw-semibold text-muted">First Name *</label>
+                        <label class="form-label small fw-semibold text-muted">{{ 'checkout.firstName' | translate }} *</label>
                         <input 
                           type="text" 
                           class="form-control rounded-3" 
@@ -108,7 +110,7 @@ import { ToastService } from '../../core/services/toast.service';
                       </div>
 
                       <div class="col-sm-6">
-                        <label class="form-label small fw-semibold text-muted">Last Name *</label>
+                        <label class="form-label small fw-semibold text-muted">{{ 'checkout.lastName' | translate }} *</label>
                         <input 
                           type="text" 
                           class="form-control rounded-3" 
@@ -119,7 +121,7 @@ import { ToastService } from '../../core/services/toast.service';
                       </div>
 
                       <div class="col-12">
-                        <label class="form-label small fw-semibold text-muted">Street Address *</label>
+                        <label class="form-label small fw-semibold text-muted">{{ 'checkout.street' | translate }} *</label>
                         <input 
                           type="text" 
                           class="form-control rounded-3" 
@@ -130,7 +132,7 @@ import { ToastService } from '../../core/services/toast.service';
                       </div>
 
                       <div class="col-sm-6">
-                        <label class="form-label small fw-semibold text-muted">City *</label>
+                        <label class="form-label small fw-semibold text-muted">{{ 'checkout.city' | translate }} *</label>
                         <input 
                           type="text" 
                           class="form-control rounded-3" 
@@ -141,7 +143,7 @@ import { ToastService } from '../../core/services/toast.service';
                       </div>
 
                       <div class="col-sm-6">
-                        <label class="form-label small fw-semibold text-muted">Country *</label>
+                        <label class="form-label small fw-semibold text-muted">{{ 'checkout.state' | translate }} *</label>
                         <input 
                           type="text" 
                           class="form-control rounded-3" 
@@ -155,7 +157,7 @@ import { ToastService } from '../../core/services/toast.service';
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" id="saveAddressCheck" formControlName="saveAsDefault">
                           <label class="form-check-label small text-muted" for="saveAddressCheck">
-                            Save this address to my profile for future orders
+                            {{ 'checkout.saveAddress' | translate }}
                           </label>
                         </div>
                       </div>
@@ -163,10 +165,10 @@ import { ToastService } from '../../core/services/toast.service';
 
                     <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
                       <a routerLink="/cart" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold">
-                        <i class="fa-solid fa-arrow-left me-1"></i> Back to Cart
+                        <i class="fa-solid fa-arrow-left me-1"></i> {{ 'checkout.backBtn' | translate }}
                       </a>
                       <button type="submit" class="btn btn-orange rounded-pill px-5 fw-bold shadow-sm" [disabled]="addressForm.invalid">
-                        Proceed to Delivery <i class="fa-solid fa-arrow-right ms-1"></i>
+                        {{ 'checkout.nextBtn' | translate }} <i class="fa-solid fa-arrow-right ms-1"></i>
                       </button>
                     </div>
                   </form>
@@ -178,7 +180,7 @@ import { ToastService } from '../../core/services/toast.service';
                 <div class="card border-0 shadow-sm rounded-4 p-4">
                   <div class="mb-4">
                     <h5 class="fw-bold m-0 text-dark">
-                      <i class="fa-solid fa-truck-fast text-orange me-2"></i>Select Delivery Method
+                      <i class="fa-solid fa-truck-fast text-orange me-2"></i>{{ 'checkout.deliveryTitle' | translate }}
                     </h5>
                     <p class="text-muted small m-0">Choose how fast you want your order delivered</p>
                   </div>
@@ -208,7 +210,7 @@ import { ToastService } from '../../core/services/toast.service';
                           </div>
                           <div class="text-end">
                             <span class="fs-5 fw-black text-orange">
-                              {{ method.cost === 0 ? 'FREE' : (method.cost | currency) }}
+                              {{ method.cost === 0 ? ('cart.freeShipping' | translate) : (method.cost | currency) }}
                             </span>
                           </div>
                         </div>
@@ -218,10 +220,10 @@ import { ToastService } from '../../core/services/toast.service';
 
                   <div class="d-flex justify-content-between align-items-center pt-3 border-top">
                     <button class="btn btn-outline-secondary rounded-pill px-4 fw-semibold" (click)="goToStep(1)">
-                      <i class="fa-solid fa-arrow-left me-1"></i> Back to Address
+                      <i class="fa-solid fa-arrow-left me-1"></i> {{ 'checkout.backBtn' | translate }}
                     </button>
                     <button class="btn btn-orange rounded-pill px-5 fw-bold shadow-sm" [disabled]="!selectedDeliveryMethod" (click)="goToStep(3)">
-                      Proceed to Review & Pay <i class="fa-solid fa-arrow-right ms-1"></i>
+                      {{ 'checkout.nextBtn' | translate }} <i class="fa-solid fa-arrow-right ms-1"></i>
                     </button>
                   </div>
                 </div>
@@ -232,7 +234,7 @@ import { ToastService } from '../../core/services/toast.service';
                 <div class="card border-0 shadow-sm rounded-4 p-4">
                   <div class="mb-4">
                     <h5 class="fw-bold m-0 text-dark">
-                      <i class="fa-solid fa-credit-card text-orange me-2"></i>Review & Payment
+                      <i class="fa-solid fa-credit-card text-orange me-2"></i>{{ 'checkout.paymentTitle' | translate }}
                     </h5>
                     <p class="text-muted small m-0">Review your order details and complete payment</p>
                   </div>
@@ -241,7 +243,7 @@ import { ToastService } from '../../core/services/toast.service';
                   <div class="bg-light p-3 rounded-4 mb-4 border">
                     <div class="row g-3">
                       <div class="col-sm-6">
-                        <div class="small text-muted fw-bold text-uppercase mb-1">Delivering To</div>
+                        <div class="small text-muted fw-bold text-uppercase mb-1">{{ 'checkout.stepAddress' | translate }}</div>
                         <div class="fw-semibold text-dark">
                           {{ addressForm.get('firstName')?.value }} {{ addressForm.get('lastName')?.value }}
                         </div>
@@ -250,7 +252,7 @@ import { ToastService } from '../../core/services/toast.service';
                         </div>
                       </div>
                       <div class="col-sm-6">
-                        <div class="small text-muted fw-bold text-uppercase mb-1">Delivery Speed</div>
+                        <div class="small text-muted fw-bold text-uppercase mb-1">{{ 'checkout.stepDelivery' | translate }}</div>
                         <div class="fw-semibold text-dark">{{ selectedDeliveryMethod?.shortName }}</div>
                         <div class="small text-muted">{{ selectedDeliveryMethod?.deliveryTime }} ({{ (selectedDeliveryMethod?.cost ?? selectedDeliveryMethod?.price) | currency }})</div>
                       </div>
@@ -258,7 +260,7 @@ import { ToastService } from '../../core/services/toast.service';
                   </div>
 
                   <!-- Items Preview -->
-                  <h6 class="fw-bold mb-3 text-dark">Basket Items ({{ basketService.itemCount() }})</h6>
+                  <h6 class="fw-bold mb-3 text-dark">{{ 'cart.title' | translate }} ({{ basketService.itemCount() }})</h6>
                   <div class="list-group list-group-flush mb-4">
                     @for (item of basketService.basket()!.items; track item.id) {
                       <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center border-bottom">
@@ -278,7 +280,7 @@ import { ToastService } from '../../core/services/toast.service';
 
                   <!-- Payment Method Selection -->
                   <h6 class="fw-bold mb-3 text-dark">
-                    <i class="fa-solid fa-wallet text-orange me-2"></i>Select Payment Method
+                    <i class="fa-solid fa-wallet text-orange me-2"></i>{{ 'checkout.paymentTitle' | translate }}
                   </h6>
 
                   <!-- 3 Payment Option Cards -->
@@ -297,8 +299,8 @@ import { ToastService } from '../../core/services/toast.service';
                             <i class="fa-brands fa-cc-mastercard text-danger"></i>
                           </div>
                         </div>
-                        <h6 class="fw-bold m-0 text-dark">Credit / Debit Card</h6>
-                        <p class="small text-muted m-0 mt-1">Visa, Mastercard, Meeza</p>
+                        <h6 class="fw-bold m-0 text-dark">{{ 'checkout.cardTitle' | translate }}</h6>
+                        <p class="small text-muted m-0 mt-1">{{ 'checkout.cardDesc' | translate }}</p>
                         <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill mt-auto pt-1 align-self-start" style="font-size: 0.7rem;">
                           <i class="fa-solid fa-bolt me-1"></i> Instant & Secure
                         </span>
@@ -318,8 +320,8 @@ import { ToastService } from '../../core/services/toast.service';
                             <i class="fa-solid fa-money-bill-wave"></i>
                           </div>
                         </div>
-                        <h6 class="fw-bold m-0 text-dark">Cash on Delivery</h6>
-                        <p class="small text-muted m-0 mt-1">الدفع نقداً عند الاستلام</p>
+                        <h6 class="fw-bold m-0 text-dark">{{ 'checkout.cashTitle' | translate }}</h6>
+                        <p class="small text-muted m-0 mt-1">{{ 'checkout.cashDesc' | translate }}</p>
                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill mt-auto pt-1 align-self-start" style="font-size: 0.7rem;">
                           <i class="fa-solid fa-house me-1"></i> Pay at Doorstep
                         </span>
@@ -339,8 +341,8 @@ import { ToastService } from '../../core/services/toast.service';
                             <i class="fa-solid fa-mobile-screen-button"></i>
                           </div>
                         </div>
-                        <h6 class="fw-bold m-0 text-dark">Electronic Wallet</h6>
-                        <p class="small text-muted m-0 mt-1">محفظة كاش / InstaPay</p>
+                        <h6 class="fw-bold m-0 text-dark">{{ 'checkout.walletsTitle' | translate }}</h6>
+                        <p class="small text-muted m-0 mt-1">{{ 'checkout.walletsDesc' | translate }}</p>
                         <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill mt-auto pt-1 align-self-start" style="font-size: 0.7rem;">
                           <i class="fa-solid fa-qrcode me-1"></i> E-Wallets
                         </span>
@@ -395,15 +397,15 @@ import { ToastService } from '../../core/services/toast.service';
                           <i class="fa-solid fa-hand-holding-dollar fs-3"></i>
                         </div>
                         <div>
-                          <h6 class="fw-bold text-dark m-0">الدفع نقداً عند استلام الطلب (Cash on Delivery)</h6>
+                          <h6 class="fw-bold text-dark m-0">{{ 'checkout.cashTitle' | translate }}</h6>
                           <p class="text-muted small m-0 mt-1">
-                            يرجى تجهيز المبلغ الإجمالي نقداً <strong class="text-orange fs-6">{{ basketService.basketTotal().total | currency }}</strong> للمندوب عند وصول الشحنة.
+                            {{ 'checkout.cashDesc' | translate }} <strong class="text-orange fs-6">{{ basketService.basketTotal().total | currency }}</strong>.
                           </p>
                         </div>
                       </div>
                       <div class="mt-3 p-2.5 bg-light rounded-3 small text-muted d-flex align-items-center gap-2 border">
                         <i class="fa-solid fa-circle-check text-success"></i>
-                        <span>مندوب التوصيل سيكون معه الفاتورة الضريبية الرسمية المختومة والمطابقة لطلبك.</span>
+                        <span>{{ 'invoice.thankYou' | translate }}</span>
                       </div>
                     </div>
                   }
@@ -485,7 +487,7 @@ import { ToastService } from '../../core/services/toast.service';
 
                   <div class="d-flex justify-content-between align-items-center pt-3 border-top">
                     <button class="btn btn-outline-secondary rounded-pill px-4 fw-semibold" (click)="goToStep(2)">
-                      <i class="fa-solid fa-arrow-left me-1"></i> Back to Delivery
+                      <i class="fa-solid fa-arrow-left me-1"></i> {{ 'checkout.backBtn' | translate }}
                     </button>
                     <button 
                       class="btn btn-orange rounded-pill px-5 py-2.5 fw-bold shadow-sm d-flex align-items-center gap-2" 
@@ -493,10 +495,10 @@ import { ToastService } from '../../core/services/toast.service';
                       (click)="placeOrder()">
                       @if (isSubmitting()) {
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <span>Placing Order...</span>
+                        <span>{{ 'checkout.processing' | translate }}</span>
                       } @else {
                         <i class="fa-solid fa-check"></i>
-                        <span>Confirm & Place Order ({{ basketService.basketTotal().total | currency }})</span>
+                        <span>{{ 'checkout.payAndPlace' | translate }} ({{ basketService.basketTotal().total | currency }})</span>
                       }
                     </button>
                   </div>
@@ -507,20 +509,20 @@ import { ToastService } from '../../core/services/toast.service';
             <!-- Order Summary Sticky Card -->
             <div class="col-lg-4">
               <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
-                <h6 class="fw-bold text-dark mb-3">Order Overview</h6>
+                <h6 class="fw-bold text-dark mb-3">{{ 'checkout.orderSummary' | translate }}</h6>
 
                 <div class="d-flex justify-content-between mb-2 small">
-                  <span class="text-muted">Items Subtotal</span>
+                  <span class="text-muted">{{ 'cart.subtotal' | translate }}</span>
                   <span class="fw-semibold text-dark">{{ basketService.basketTotal().subtotal | currency }}</span>
                 </div>
 
                 <div class="d-flex justify-content-between mb-2 small">
-                  <span class="text-muted">Delivery Speed</span>
+                  <span class="text-muted">{{ 'cart.shipping' | translate }}</span>
                   <span class="fw-semibold text-dark">
                     @if (selectedDeliveryMethod) {
-                      {{ selectedDeliveryMethod.cost === 0 ? 'FREE' : (selectedDeliveryMethod.cost | currency) }}
+                      {{ selectedDeliveryMethod.cost === 0 ? ('cart.freeShipping' | translate) : (selectedDeliveryMethod.cost | currency) }}
                     } @else {
-                      <span class="text-muted">Selected next</span>
+                      <span class="text-muted">{{ 'cart.calculatedAtCheckout' | translate }}</span>
                     }
                   </span>
                 </div>
@@ -528,12 +530,12 @@ import { ToastService } from '../../core/services/toast.service';
                 <hr class="my-3 opacity-25">
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                  <span class="fw-bold text-dark fs-5">Estimated Total</span>
+                  <span class="fw-bold text-dark fs-5">{{ 'checkout.total' | translate }}</span>
                   <span class="fw-black text-orange fs-4">{{ basketService.basketTotal().total | currency }}</span>
                 </div>
 
                 <div class="p-2.5 bg-light rounded-3 text-muted small lh-sm">
-                  <i class="fa-solid fa-shield-halved text-success me-1"></i> 100% Secure Checkout guaranteed by Talabat Prime.
+                  <i class="fa-solid fa-shield-halved text-success me-1"></i> {{ 'product.securePayment' | translate }}
                 </div>
               </div>
             </div>
