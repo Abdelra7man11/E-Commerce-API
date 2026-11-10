@@ -1,4 +1,4 @@
-﻿using DomainLayer.Models.Identity;
+using DomainLayer.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Persistence.Identity;
@@ -34,7 +34,15 @@ namespace Persistence
              options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection"))
              );
 
-            Services.AddIdentityCore<ApplicationUser>()
+            Services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 0;
+            })
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<StoreIdentityDbContext>();
 

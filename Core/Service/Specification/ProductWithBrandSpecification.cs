@@ -1,4 +1,4 @@
-﻿using DomainLayer.Models.ProductsModule;
+using DomainLayer.Models.ProductsModule;
 using Shared;
 
 namespace Service.Specification
@@ -16,34 +16,28 @@ namespace Service.Specification
             AddInclude(P => P.ProductBrand);
             AddInclude(P => P.ProductType);
 
-            switch (queryParams.Sort)
+            switch (queryParams.Sort?.ToLower())
             {
-                case
-                    SortingProducts.NameAsc:
-                    AddOrderBy(P => P.Name);
-                    break;
-                case
-                    SortingProducts.NameDesc:
-                    AddOrderByDesc(P => P.Name);
-                    break;
-                case
-                    SortingProducts.PriceAsc:
+                case "priceasc":
                     AddOrderBy(P => P.Price);
                     break;
-                case
-                    SortingProducts.PriceDesc:
+                case "pricedesc":
                     AddOrderByDesc(P => P.Price);
                     break;
-                default:
+                case "namedesc":
+                    AddOrderByDesc(P => P.Name);
                     break;
-
+                case "name":
+                case "nameasc":
+                default:
+                    AddOrderBy(P => P.Name);
+                    break;
             }
 
             ApplyPagination(queryParams.PageSize, queryParams.PageNumber);
         }
 
         // Get Product Id
-
         public ProductWithBrandSpecification(int id) : base(p => p.Id == id)
         {
             AddInclude(P => P.ProductBrand);
