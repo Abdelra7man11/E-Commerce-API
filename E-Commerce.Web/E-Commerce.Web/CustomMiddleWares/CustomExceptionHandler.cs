@@ -35,10 +35,20 @@ namespace E_Commerce.Web.CustomMiddleWares
 
         private static async Task HandleExceptionErrorAsync(HttpContext httpContext, Exception ex)
         {
+            var message = ex.Message;
+            if (ex.InnerException != null)
+            {
+                message += " -> " + ex.InnerException.Message;
+                if (ex.InnerException.InnerException != null)
+                {
+                    message += " -> " + ex.InnerException.InnerException.Message;
+                }
+            }
+
             //response object
             var Response = new ErrorToReturn()
             {
-                ErrorMessage = ex.Message
+                ErrorMessage = message
             };
 
             // set status code for response

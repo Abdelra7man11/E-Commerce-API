@@ -14,11 +14,12 @@ namespace Domain.Models.Orders
     {
         public Order()
         {
-
+            Id = Guid.NewGuid();
         }
 
         public Order(string userEmail, OrderAddress address, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal)
         {
+            Id = Guid.NewGuid();
             buyerEmail = userEmail;
             shipToAddress = address;
             DeliveryMethod = deliveryMethod;
@@ -33,7 +34,7 @@ namespace Domain.Models.Orders
         public int DeliveryMethodId { get; set; } // FK 
         
         public ICollection<OrderItem> Items { get; set; } = [];
-        public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
         public OrderStatus Status { get; set; } 
         
         public decimal SubTotal { get; set; }
