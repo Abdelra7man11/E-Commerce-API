@@ -4,6 +4,8 @@ using DomainLayer.Models.Identity;
 using DomainLayer.Models.ProductsModule;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Persistence.Data;
 using Persistence.Identity;
 using System;
@@ -94,7 +96,15 @@ namespace Persistence
             {
                 if (_identityDbContext.Database.IsNpgsql())
                 {
-                    await _identityDbContext.Database.EnsureCreatedAsync();
+                    try
+                    {
+                        var creator = (RelationalDatabaseCreator)_identityDbContext.Database.GetService<IDatabaseCreator>();
+                        await creator.CreateTablesAsync();
+                    }
+                    catch
+                    {
+                        // Tables already exist or created
+                    }
                 }
                 else
                 {

@@ -12,17 +12,15 @@ export class ShopService {
   private baseUrl = environment.apiUrl;
 
   resolveImageUrl(pictureUrl: string | undefined): string {
-    if (!pictureUrl) return '';
+    if (!pictureUrl) return 'assets/placeholder.svg';
+    const filename = pictureUrl.split('/').pop() || '';
+    if (filename && (filename.endsWith('.png') || filename.endsWith('.jpg') || filename.endsWith('.svg') || filename.endsWith('.webp'))) {
+      return `assets/images/Products/${filename}`;
+    }
     if (pictureUrl.startsWith('http://') || pictureUrl.startsWith('https://')) {
       return pictureUrl;
     }
-    if (pictureUrl.startsWith('Images/') || pictureUrl.startsWith('images/')) {
-      return `https://localhost:7112/${pictureUrl}`;
-    }
-    if (pictureUrl.startsWith('/')) {
-      return `https://localhost:7112${pictureUrl}`;
-    }
-    return `https://localhost:7112/${pictureUrl}`;
+    return `assets/images/Products/${filename || pictureUrl}`;
   }
 
   getProducts(shopParams: ShopParams): Observable<Pagination> {
