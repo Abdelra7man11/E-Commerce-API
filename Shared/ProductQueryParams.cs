@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +10,22 @@ namespace Shared
     {
         public int? BrandId { get; set; }
         public int? TypeId { get; set; }
-        public SortingProducts Sort { get; set; }
+        public string? Sort { get; set; }
         public string? Search { get; set; }
 
         #region Pagination
-        private const int DefaultPageSize = 5;
-        private const int MaxPageSize = 10;
+        private const int DefaultPageSize = 6;
+        private const int MaxPageSize = 50;
 
         private int _pageSize = DefaultPageSize;
 
         public int PageNumber { get; set; } = 1;
+
+        public int PageIndex
+        {
+            get => PageNumber;
+            set => PageNumber = value;
+        }
 
         public int PageSize
         {
