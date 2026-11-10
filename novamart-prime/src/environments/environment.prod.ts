@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://localhost:7112/api/' // Will be replaced with production API URL once deployed
+  apiUrl: 'http://novamart-api.runasp.net/api/'
 };
