@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF5A00"/>
+      <stop offset="50%" stop-color="#FF6F00"/>
+      <stop offset="100%" stop-color="#E04700"/>
+    </linearGradient>
+    <linearGradient id="boltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE000"/>
+      <stop offset="100%" stop-color="#FF9E00"/>
+    </linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Modern Rounded Squircle Base -->
+  <rect width="64" height="64" rx="18" fill="url(#bgGrad)"/>
+
+  <!-- Shopping Bag Handle -->
+  <path d="M23 23C23 16.8 27 12 32 12C37 12 41 16.8 41 23" 
+        stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.95"/>
+
+  <!-- Shopping Bag Body -->
+  <path d="M15 23H49L45.5 52C45.3 53.6 43.8 54.8 42.1 54.8H21.9C20.2 54.8 18.7 53.6 18.5 52L15 23Z" 
+        fill="#ffffff" filter="url(#shadow)"/>
+
+  <!-- Prime Speed Lightning Bolt in Center -->
+  <path d="M33.5 27L24.5 40H32L29.5 50L40.5 37H33L35.5 27Z" 
+        fill="url(#bgGrad)"/>
+</svg>
