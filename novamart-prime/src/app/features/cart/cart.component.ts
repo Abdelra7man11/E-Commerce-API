@@ -62,7 +62,7 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
                             <td class="ps-4 py-3">
                               <div class="d-flex align-items-center gap-3">
                                 <img 
-                                  [src]="item.pictureUrl || 'assets/placeholder.png'" 
+                                  [src]="getItemImageUrl(item.pictureUrl)" 
                                   [alt]="item.productName"
                                   class="rounded-3 border object-fit-contain bg-white p-1"
                                   style="width: 64px; height: 64px;"
@@ -270,6 +270,15 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 export class CartComponent {
   basketService = inject(BasketService);
   toast = inject(ToastService);
+
+  getItemImageUrl(pictureUrl: string | undefined): string {
+    if (!pictureUrl) return 'assets/placeholder.svg';
+    const filename = pictureUrl.split('/').pop() || '';
+    if (filename && (filename.endsWith('.png') || filename.endsWith('.jpg') || filename.endsWith('.svg') || filename.endsWith('.webp'))) {
+      return `assets/images/Products/${filename}`;
+    }
+    return pictureUrl;
+  }
 
   promoCode = '';
   discountApplied = false;

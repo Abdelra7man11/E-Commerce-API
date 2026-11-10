@@ -49,7 +49,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
                   <i class="fa-solid fa-sparkles me-1"></i> Fresh Arrival
                 </span>
                 <img 
-                  [src]="product()?.pictureUrl || 'assets/placeholder.png'" 
+                  [src]="displayImageUrl" 
                   [alt]="product()?.name" 
                   class="img-fluid object-fit-contain mx-auto"
                   style="max-height: 420px; transition: transform 0.3s ease;"
@@ -226,6 +226,16 @@ export class ProductDetailComponent implements OnInit {
   relatedProducts = signal<Product[]>([]);
   isLoading = signal<boolean>(true);
   quantity = 1;
+
+  get displayImageUrl(): string {
+    const url = this.product()?.pictureUrl;
+    if (!url) return 'assets/placeholder.svg';
+    const filename = url.split('/').pop() || '';
+    if (filename && (filename.endsWith('.png') || filename.endsWith('.jpg') || filename.endsWith('.svg') || filename.endsWith('.webp'))) {
+      return `assets/images/Products/${filename}`;
+    }
+    return url;
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

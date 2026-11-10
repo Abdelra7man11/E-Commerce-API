@@ -265,7 +265,7 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
                     @for (item of basketService.basket()!.items; track item.id) {
                       <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center border-bottom">
                         <div class="d-flex align-items-center gap-3">
-                          <img [src]="item.pictureUrl || 'assets/placeholder.svg'" (error)="onImgError($event)" class="rounded-3 border object-fit-contain p-1" style="width: 44px; height: 44px;">
+                          <img [src]="getItemImageUrl(item.pictureUrl)" (error)="onImgError($event)" class="rounded-3 border object-fit-contain p-1" style="width: 44px; height: 44px;">
                           <div>
                             <div class="fw-semibold text-dark small">{{ item.productName }}</div>
                             <div class="text-muted" style="font-size: 0.75rem;">Qty: {{ item.quantity }} × {{ item.price | currency }}</div>
@@ -609,6 +609,15 @@ export class CheckoutComponent implements OnInit {
   deliveryMethods = signal<DeliveryMethod[]>([]);
   selectedDeliveryMethod: DeliveryMethod | null = null;
   isSubmitting = signal<boolean>(false);
+
+  getItemImageUrl(pictureUrl: string | undefined): string {
+    if (!pictureUrl) return 'assets/placeholder.svg';
+    const filename = pictureUrl.split('/').pop() || '';
+    if (filename && (filename.endsWith('.png') || filename.endsWith('.jpg') || filename.endsWith('.svg') || filename.endsWith('.webp'))) {
+      return `assets/images/Products/${filename}`;
+    }
+    return pictureUrl;
+  }
 
   mockCardNumber = '4242 4242 4242 4242';
   mockExp = '12/28';

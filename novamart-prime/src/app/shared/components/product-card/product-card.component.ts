@@ -18,7 +18,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 
       <!-- Image container -->
       <a [routerLink]="['/shop', product.id]" class="d-block overflow-hidden text-center p-3" style="height: 220px; background-color: var(--tp-surface-subtle);">
-        <img [src]="product.pictureUrl" [alt]="product.name"
+        <img [src]="displayImageUrl" [alt]="product.name"
              class="img-fluid h-100 object-fit-contain product-img transition"
              (error)="onImgError($event)">
       </a>
@@ -89,6 +89,15 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 export class ProductCardComponent {
   @Input({ required: true }) product!: Product;
   private basketService = inject(BasketService);
+
+  get displayImageUrl(): string {
+    if (!this.product?.pictureUrl) return 'assets/placeholder.svg';
+    const filename = this.product.pictureUrl.split('/').pop() || '';
+    if (filename && (filename.endsWith('.png') || filename.endsWith('.jpg') || filename.endsWith('.svg') || filename.endsWith('.webp'))) {
+      return `assets/images/Products/${filename}`;
+    }
+    return this.product.pictureUrl;
+  }
 
   addToCart(event: MouseEvent) {
     event.stopPropagation();

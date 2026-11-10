@@ -45,13 +45,34 @@ export class BasketService {
    * Synchronously restore basket from localStorage on app boot / page refresh
    * so the cart counter and items are NEVER wiped out while network calls are in flight.
    */
+  private resolveImageUrl(pictureUrl: string | undefined): string {
+    if (!pictureUrl) return 'assets/placeholder.svg';
+    const filename = pictureUrl.split('/').pop() || '';
+    if (filename && (filename.endsWith('.png') || filename.endsWith('.jpg') || filename.endsWith('.svg') || filename.endsWith('.webp'))) {
+      return `assets/images/Products/${filename}`;
+    }
+    return pictureUrl;
+  }
+
+  private sanitizeBasket(basket: CustomerBasket): CustomerBasket {
+    if (!basket || !Array.isArray(basket.items)) return basket;
+    return {
+      ...basket,
+      items: basket.items.map(item => ({
+        ...item,
+        pictureUrl: this.resolveImageUrl(item.pictureUrl)
+      }))
+    };
+  }
+
   private restoreBasketFromLocal() {
     try {
       const savedData = localStorage.getItem('tp_basket_data');
       if (savedData) {
         const parsed = JSON.parse(savedData) as CustomerBasket;
         if (parsed && Array.isArray(parsed.items) && parsed.items.length > 0) {
-          this.basket.set(parsed);
+          const sanitized = this.sanitizeBasket(parsed);
+          this.basket.set(sanitized);
         }
       }
     } catch (e) {
@@ -93,8 +114,9 @@ export class BasketService {
     return this.http.get<CustomerBasket | null>(`${this.baseUrl}baskets?id=${encodeURIComponent(id)}&key=${encodeURIComponent(id)}`).subscribe({
       next: basket => {
         if (basket && basket.items && basket.items.length > 0) {
-          this.basket.set(basket);
-          this.saveBasketToLocal(basket);
+          const sanitized = this.sanitizeBasket(basket);
+          this.basket.set(sanitized);
+          this.saveBasketToLocal(sanitized);
         } else {
           // If Redis returned null or empty, but we have items in local cache, re-save to backend
           const local = this.basket();
@@ -137,7 +159,7 @@ export class BasketService {
       productName: product.name,
       price: product.price,
       quantity,
-      pictureUrl: product.pictureUrl,
+      pictureUrl: this.resolveImageUrl(product.pictureUrl),
       brand: product.productBrand,
       type: product.productType
     };

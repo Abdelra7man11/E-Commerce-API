@@ -33,7 +33,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
             @if (basket.items.length > 0) {
               @for (item of basket.items; track item.id) {
                 <div class="d-flex align-items-center gap-3 mb-3 p-2 border rounded-3 bg-white shadow-sm">
-                  <img [src]="item.pictureUrl" [alt]="item.productName"
+                  <img [src]="getItemImageUrl(item.pictureUrl)" [alt]="item.productName"
                        class="rounded-3 object-fit-cover"
                        style="width: 65px; height: 65px; background: #f8fafc;"
                        (error)="onImgError($event)">
@@ -145,6 +145,16 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 })
 export class CartDrawerComponent {
   basketService = inject(BasketService);
+
+  getItemImageUrl(pictureUrl: string | undefined): string {
+    if (!pictureUrl) return 'assets/placeholder.svg';
+    const filename = pictureUrl.split('/').pop() || '';
+    if (filename && (filename.endsWith('.png') || filename.endsWith('.jpg') || filename.endsWith('.svg') || filename.endsWith('.webp'))) {
+      return `assets/images/Products/${filename}`;
+    }
+    return pictureUrl;
+  }
+
   private readonly FALLBACK_IMG = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23ff5a00' stroke-width='1.5'%3E%3Crect width='18' height='18' x='3' y='3' rx='2' stroke='%23cbd5e1'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5' stroke='%23ff5a00'/%3E%3Cpath d='m21 15-5-5L5 21' stroke='%2394a3b8'/%3E%3C/svg%3E";
 
   onImgError(event: Event) {
