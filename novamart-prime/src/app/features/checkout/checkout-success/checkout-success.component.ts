@@ -27,11 +27,25 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
               </p>
 
               @if (orderId) {
-                <div class="order-id-box p-3 bg-light rounded-4 mb-4 border border-dashed">
+                <div class="order-id-box p-3 bg-light rounded-4 mb-3 border border-dashed">
                   <div class="text-muted small fw-semibold text-uppercase tracking-wider mb-1">Your Order Reference</div>
                   <div class="fw-bold font-monospace text-dark fs-6 text-break">{{ orderId }}</div>
                 </div>
               }
+
+              <!-- Payment Method Confirmation Banner -->
+              <div class="p-3 rounded-4 mb-4 text-start border d-flex align-items-center gap-3"
+                   [ngClass]="getPaymentBoxClass()">
+                <div class="p-2.5 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                     [ngClass]="getPaymentIconBg()">
+                  <i [class]="getPaymentIcon() + ' fs-4'"></i>
+                </div>
+                <div class="lh-sm">
+                  <div class="small text-muted fw-bold text-uppercase" style="font-size: 0.72rem;">Payment Method</div>
+                  <div class="fw-bold text-dark fs-6">{{ paymentInfo?.provider || 'Credit Card' }}</div>
+                  <div class="small text-muted mt-0.5">{{ paymentInfo?.details || 'Online Payment' }}</div>
+                </div>
+              </div>
 
               <!-- Highlights -->
               <div class="row g-2 mb-4 text-start">
@@ -55,7 +69,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
               <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
                 @if (orderId) {
                   <a [routerLink]="['/orders', orderId]" class="btn btn-orange rounded-pill px-4 py-2.5 fw-bold shadow-sm">
-                    <i class="fa-solid fa-receipt me-2"></i>View Order Details
+                    <i class="fa-solid fa-receipt me-2"></i>View Official Invoice
                   </a>
                 }
                 <a routerLink="/orders" class="btn btn-outline-secondary rounded-pill px-4 py-2.5 fw-semibold">
@@ -88,8 +102,37 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 export class CheckoutSuccessComponent implements OnInit {
   private route = inject(ActivatedRoute);
   orderId: string | null = null;
+  paymentInfo: any = null;
 
   ngOnInit(): void {
     this.orderId = this.route.snapshot.paramMap.get('id');
+    if (this.orderId) {
+      try {
+        const saved = localStorage.getItem(`tp_order_payment_${this.orderId}`);
+        if (saved) {
+          this.paymentInfo = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.warn('Could not read payment info', e);
+      }
+    }
+  }
+
+  getPaymentBoxClass(): string {
+    if (this.paymentInfo?.method === 'cash') return 'bg-success-subtle border-success-subtle';
+    if (this.paymentInfo?.method === 'wallet') return 'bg-warning-subtle border-warning-subtle';
+    return 'bg-light border';
+  }
+
+  getPaymentIconBg(): string {
+    if (this.paymentInfo?.method === 'cash') return 'bg-success text-white';
+    if (this.paymentInfo?.method === 'wallet') return 'bg-warning text-dark';
+    return 'bg-primary text-white';
+  }
+
+  getPaymentIcon(): string {
+    if (this.paymentInfo?.method === 'cash') return 'fa-solid fa-money-bill-wave';
+    if (this.paymentInfo?.method === 'wallet') return 'fa-solid fa-mobile-screen-button';
+    return 'fa-regular fa-credit-card';
   }
 }

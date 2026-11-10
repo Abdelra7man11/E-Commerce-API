@@ -94,11 +94,30 @@ html.dark-theme {
     color: var(--tp-text-dark) !important;
   }
 
-  /* Delivery Method Selected */
-  .delivery-method-card.selected-method {
-    background-color: rgba(255, 90, 0, 0.12) !important;
-    border-color: var(--tp-primary) !important;
+.delivery-method-card,
+.payment-method-card {
+  border: 1.5px solid var(--tp-border);
+  background: var(--tp-surface);
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: var(--tp-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
   }
+
+  &.selected-method {
+    border-color: var(--tp-primary) !important;
+    background: rgba(255, 90, 0, 0.08) !important;
+    box-shadow: 0 0 0 1px var(--tp-primary);
+  }
+}
+
+html.dark-theme .delivery-method-card.selected-method,
+html.dark-theme .payment-method-card.selected-method {
+  background: rgba(255, 90, 0, 0.16) !important;
+  border-color: var(--tp-primary) !important;
+}
 
   /* Borders & Dividers */
   .border,

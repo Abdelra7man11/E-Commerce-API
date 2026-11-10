@@ -90,9 +90,12 @@ import { OrdersService } from '../../../core/services/orders.service';
                 </div>
 
                 <div class="col-sm-6 col-lg-3">
-                  <div class="small text-muted fw-bold text-uppercase mb-1">Delivery Speed</div>
+                  <div class="small text-muted fw-bold text-uppercase mb-1">Payment & Delivery</div>
                   <div class="fw-semibold text-dark">{{ order()!.deliveryMethod }}</div>
-                  <div class="small text-muted">{{ order()!.deliveryCost | currency }}</div>
+                  <div class="small text-orange fw-bold mt-1 d-flex align-items-center gap-1.5">
+                    <i [class]="getPaymentIcon()"></i>
+                    <span>{{ getPaymentMethodText() }}</span>
+                  </div>
                 </div>
               </div>
 
@@ -177,10 +180,20 @@ export class OrderDetailComponent implements OnInit {
 
   order = signal<Order | null>(null);
   isLoading = signal<boolean>(true);
+  paymentInfo: any = null;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      try {
+        const saved = localStorage.getItem(`tp_order_payment_${id}`);
+        if (saved) {
+          this.paymentInfo = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.warn('Could not read payment info', e);
+      }
+
       this.ordersService.getOrderDetailed(id).subscribe({
         next: o => {
           this.order.set(o);
@@ -191,6 +204,19 @@ export class OrderDetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  getPaymentMethodText(): string {
+    if (this.paymentInfo?.provider) {
+      return this.paymentInfo.provider;
+    }
+    return 'Credit / Debit Card';
+  }
+
+  getPaymentIcon(): string {
+    if (this.paymentInfo?.method === 'cash') return 'fa-solid fa-money-bill-wave text-success';
+    if (this.paymentInfo?.method === 'wallet') return 'fa-solid fa-mobile-screen-button text-danger';
+    return 'fa-regular fa-credit-card text-primary';
   }
 
   getStatusBadgeClass(status: string): string {

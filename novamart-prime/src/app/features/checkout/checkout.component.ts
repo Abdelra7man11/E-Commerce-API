@@ -276,36 +276,212 @@ import { ToastService } from '../../core/services/toast.service';
                     }
                   </div>
 
-                  <!-- Mock Payment Section -->
+                  <!-- Payment Method Selection -->
                   <h6 class="fw-bold mb-3 text-dark">
-                    <i class="fa-regular fa-credit-card text-muted me-2"></i>Payment Details
+                    <i class="fa-solid fa-wallet text-orange me-2"></i>Select Payment Method
                   </h6>
-                  <div class="p-3 border rounded-4 bg-white mb-4">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                      <span class="badge bg-success-subtle text-success px-3 py-1.5 rounded-pill fw-semibold">
-                        <i class="fa-solid fa-lock me-1"></i> Sandbox Test Mode
-                      </span>
-                      <span class="small text-muted">Any 16-digit card number will work</span>
+
+                  <!-- 3 Payment Option Cards -->
+                  <div class="row g-3 mb-4">
+                    <!-- 1. Visa / Mastercard Card -->
+                    <div class="col-md-4">
+                      <div class="payment-method-card p-3 rounded-4 border d-flex flex-column h-100 cursor-pointer transition-all"
+                           [class.selected-method]="selectedPaymentMethod === 'card'"
+                           (click)="selectedPaymentMethod = 'card'">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                          <div class="form-check m-0">
+                            <input class="form-check-input" type="radio" name="paymentRadio" [checked]="selectedPaymentMethod === 'card'">
+                          </div>
+                          <div class="d-flex gap-1.5 fs-5">
+                            <i class="fa-brands fa-cc-visa text-primary"></i>
+                            <i class="fa-brands fa-cc-mastercard text-danger"></i>
+                          </div>
+                        </div>
+                        <h6 class="fw-bold m-0 text-dark">Credit / Debit Card</h6>
+                        <p class="small text-muted m-0 mt-1">Visa, Mastercard, Meeza</p>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill mt-auto pt-1 align-self-start" style="font-size: 0.7rem;">
+                          <i class="fa-solid fa-bolt me-1"></i> Instant & Secure
+                        </span>
+                      </div>
                     </div>
 
-                    <div class="row g-3">
-                      <div class="col-12">
-                        <label class="form-label small fw-semibold text-muted">Card Number</label>
-                        <div class="input-group">
-                          <span class="input-group-text bg-light border-end-0"><i class="fa-regular fa-credit-card text-muted"></i></span>
-                          <input type="text" class="form-control border-start-0" placeholder="4242 4242 4242 4242" [(ngModel)]="mockCardNumber" maxlength="19">
+                    <!-- 2. Cash on Delivery (COD) -->
+                    <div class="col-md-4">
+                      <div class="payment-method-card p-3 rounded-4 border d-flex flex-column h-100 cursor-pointer transition-all"
+                           [class.selected-method]="selectedPaymentMethod === 'cash'"
+                           (click)="selectedPaymentMethod = 'cash'">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                          <div class="form-check m-0">
+                            <input class="form-check-input" type="radio" name="paymentRadio" [checked]="selectedPaymentMethod === 'cash'">
+                          </div>
+                          <div class="text-success fs-5">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                          </div>
                         </div>
+                        <h6 class="fw-bold m-0 text-dark">Cash on Delivery</h6>
+                        <p class="small text-muted m-0 mt-1">الدفع نقداً عند الاستلام</p>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill mt-auto pt-1 align-self-start" style="font-size: 0.7rem;">
+                          <i class="fa-solid fa-house me-1"></i> Pay at Doorstep
+                        </span>
                       </div>
-                      <div class="col-sm-6">
-                        <label class="form-label small fw-semibold text-muted">Expiration Date</label>
-                        <input type="text" class="form-control" placeholder="MM/YY" [(ngModel)]="mockExp" maxlength="5">
-                      </div>
-                      <div class="col-sm-6">
-                        <label class="form-label small fw-semibold text-muted">CVC / CVV</label>
-                        <input type="password" class="form-control" placeholder="123" [(ngModel)]="mockCvc" maxlength="4">
+                    </div>
+
+                    <!-- 3. Electronic Wallet (Vodafone Cash / InstaPay) -->
+                    <div class="col-md-4">
+                      <div class="payment-method-card p-3 rounded-4 border d-flex flex-column h-100 cursor-pointer transition-all"
+                           [class.selected-method]="selectedPaymentMethod === 'wallet'"
+                           (click)="selectedPaymentMethod = 'wallet'">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                          <div class="form-check m-0">
+                            <input class="form-check-input" type="radio" name="paymentRadio" [checked]="selectedPaymentMethod === 'wallet'">
+                          </div>
+                          <div class="text-danger fs-5">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                          </div>
+                        </div>
+                        <h6 class="fw-bold m-0 text-dark">Electronic Wallet</h6>
+                        <p class="small text-muted m-0 mt-1">محفظة كاش / InstaPay</p>
+                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill mt-auto pt-1 align-self-start" style="font-size: 0.7rem;">
+                          <i class="fa-solid fa-qrcode me-1"></i> E-Wallets
+                        </span>
                       </div>
                     </div>
                   </div>
+
+                  <!-- Dynamic Payment Details Box -->
+                  @if (selectedPaymentMethod === 'card') {
+                    <div class="p-4 border rounded-4 bg-white mb-4 shadow-2xs">
+                      <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="badge bg-success-subtle text-success px-2.5 py-1 rounded-pill fw-semibold" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-shield-halved me-1"></i> 256-Bit SSL Encrypted
+                          </span>
+                          <span class="small text-muted">Sandbox Test Mode Enabled</span>
+                        </div>
+                        <div class="d-flex gap-2 text-muted fs-5">
+                          <i class="fa-brands fa-cc-visa text-primary"></i>
+                          <i class="fa-brands fa-cc-mastercard text-danger"></i>
+                        </div>
+                      </div>
+
+                      <div class="row g-3">
+                        <div class="col-12">
+                          <label class="form-label small fw-semibold text-muted">Cardholder Name</label>
+                          <input type="text" class="form-control" placeholder="e.g. Ahmed Hassan" [(ngModel)]="cardHolderName">
+                        </div>
+                        <div class="col-12">
+                          <label class="form-label small fw-semibold text-muted">Card Number</label>
+                          <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fa-regular fa-credit-card text-muted"></i></span>
+                            <input type="text" class="form-control border-start-0" placeholder="4242 4242 4242 4242" [(ngModel)]="mockCardNumber" maxlength="19">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <label class="form-label small fw-semibold text-muted">Expiration Date</label>
+                          <input type="text" class="form-control" placeholder="MM/YY" [(ngModel)]="mockExp" maxlength="5">
+                        </div>
+                        <div class="col-sm-6">
+                          <label class="form-label small fw-semibold text-muted">CVC / CVV</label>
+                          <input type="password" class="form-control" placeholder="•••" [(ngModel)]="mockCvc" maxlength="4">
+                        </div>
+                      </div>
+                    </div>
+                  }
+
+                  @if (selectedPaymentMethod === 'cash') {
+                    <div class="p-4 border rounded-4 bg-white mb-4 shadow-2xs">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="p-3 bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 54px; height: 54px;">
+                          <i class="fa-solid fa-hand-holding-dollar fs-3"></i>
+                        </div>
+                        <div>
+                          <h6 class="fw-bold text-dark m-0">الدفع نقداً عند استلام الطلب (Cash on Delivery)</h6>
+                          <p class="text-muted small m-0 mt-1">
+                            يرجى تجهيز المبلغ الإجمالي نقداً <strong class="text-orange fs-6">{{ basketService.basketTotal().total | currency }}</strong> للمندوب عند وصول الشحنة.
+                          </p>
+                        </div>
+                      </div>
+                      <div class="mt-3 p-2.5 bg-light rounded-3 small text-muted d-flex align-items-center gap-2 border">
+                        <i class="fa-solid fa-circle-check text-success"></i>
+                        <span>مندوب التوصيل سيكون معه الفاتورة الضريبية الرسمية المختومة والمطابقة لطلبك.</span>
+                      </div>
+                    </div>
+                  }
+
+                  @if (selectedPaymentMethod === 'wallet') {
+                    <div class="p-4 border rounded-4 bg-white mb-4 shadow-2xs">
+                      <div class="mb-3">
+                        <label class="form-label small fw-semibold text-muted">Choose Your E-Wallet Provider (اختر مزود المحفظة):</label>
+                        <div class="d-flex flex-wrap gap-2">
+                          <button type="button" 
+                                  class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-flex align-items-center gap-1.5 border transition-all"
+                                  [class.btn-danger]="selectedWalletProvider === 'Vodafone Cash'"
+                                  [class.btn-light]="selectedWalletProvider !== 'Vodafone Cash'"
+                                  (click)="selectedWalletProvider = 'Vodafone Cash'">
+                            <i class="fa-solid fa-mobile-screen"></i>
+                            Vodafone Cash
+                          </button>
+                          <button type="button" 
+                                  class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-flex align-items-center gap-1.5 border transition-all"
+                                  [class.btn-primary]="selectedWalletProvider === 'InstaPay'"
+                                  [class.btn-light]="selectedWalletProvider !== 'InstaPay'"
+                                  (click)="selectedWalletProvider = 'InstaPay'">
+                            <i class="fa-solid fa-bolt text-warning"></i>
+                            InstaPay
+                          </button>
+                          <button type="button" 
+                                  class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-flex align-items-center gap-1.5 border transition-all"
+                                  [class.btn-warning]="selectedWalletProvider === 'Orange Money'"
+                                  [class.btn-light]="selectedWalletProvider !== 'Orange Money'"
+                                  (click)="selectedWalletProvider = 'Orange Money'">
+                            Orange Cash
+                          </button>
+                          <button type="button" 
+                                  class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-flex align-items-center gap-1.5 border transition-all"
+                                  [class.btn-success]="selectedWalletProvider === 'Etisalat Cash'"
+                                  [class.btn-light]="selectedWalletProvider !== 'Etisalat Cash'"
+                                  (click)="selectedWalletProvider = 'Etisalat Cash'">
+                            Etisalat Cash
+                          </button>
+                          <button type="button" 
+                                  class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold d-flex align-items-center gap-1.5 border transition-all"
+                                  [class.btn-secondary]="selectedWalletProvider === 'WE Pay'"
+                                  [class.btn-light]="selectedWalletProvider !== 'WE Pay'"
+                                  (click)="selectedWalletProvider = 'WE Pay'">
+                            WE Pay
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="row g-3">
+                        <div class="col-sm-7">
+                          <label class="form-label small fw-semibold text-muted">
+                            {{ selectedWalletProvider === 'InstaPay' ? 'InstaPay IPA / Mobile (عنوان أو رقم انستاباي)' : 'Wallet Mobile Number (رقم محفظة كاش)' }} *
+                          </label>
+                          <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                              <i class="fa-solid fa-mobile text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0" 
+                                   [placeholder]="selectedWalletProvider === 'InstaPay' ? 'name@instapay or 010...' : '01012345678'" 
+                                   [(ngModel)]="walletPhoneNumber" 
+                                   maxlength="30">
+                          </div>
+                        </div>
+                        <div class="col-sm-5">
+                          <label class="form-label small fw-semibold text-muted">Total Transfer Amount</label>
+                          <div class="form-control bg-light fw-black text-orange border-0 d-flex align-items-center">
+                            {{ basketService.basketTotal().total | currency }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mt-3 p-2.5 bg-light rounded-3 small text-muted d-flex align-items-center gap-2 border">
+                        <i class="fa-solid fa-paper-plane text-orange"></i>
+                        <span>سيتم إرسال إشعار تحويل ومطالبة دفع تلقائية إلى رقم المحفظة المسجل لتأكيد العملية بأمان.</span>
+                      </div>
+                    </div>
+                  }
 
                   <div class="d-flex justify-content-between align-items-center pt-3 border-top">
                     <button class="btn btn-outline-secondary rounded-pill px-4 fw-semibold" (click)="goToStep(2)">
@@ -313,7 +489,7 @@ import { ToastService } from '../../core/services/toast.service';
                     </button>
                     <button 
                       class="btn btn-orange rounded-pill px-5 py-2.5 fw-bold shadow-sm d-flex align-items-center gap-2" 
-                      [disabled]="isSubmitting()"
+                      [disabled]="isSubmitting() || (selectedPaymentMethod === 'wallet' && !walletPhoneNumber.trim())"
                       (click)="placeOrder()">
                       @if (isSubmitting()) {
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -435,6 +611,10 @@ export class CheckoutComponent implements OnInit {
   mockCardNumber = '4242 4242 4242 4242';
   mockExp = '12/28';
   mockCvc = '123';
+  cardHolderName = '';
+  selectedPaymentMethod: 'card' | 'cash' | 'wallet' = 'card';
+  selectedWalletProvider = 'Vodafone Cash';
+  walletPhoneNumber = '01012345678';
 
   addressForm: FormGroup = this.fb.group({
     firstName: ['', Validators.required],
@@ -523,6 +703,11 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
+    if (this.selectedPaymentMethod === 'wallet' && !this.walletPhoneNumber.trim()) {
+      this.toast.error('Please enter your wallet phone number or InstaPay ID');
+      return;
+    }
+
     const { firstName, lastName, street, city, country } = this.addressForm.value;
     const orderToCreate: OrderToCreate = {
       basketId: basket.id,
@@ -536,6 +721,20 @@ export class CheckoutComponent implements OnInit {
       this.checkoutService.createOrder(orderToCreate).subscribe({
         next: createdOrder => {
           this.isSubmitting.set(false);
+
+          // Save selected payment metadata for success screen and tax invoice
+          const paymentData = {
+            method: this.selectedPaymentMethod,
+            provider: this.selectedPaymentMethod === 'wallet' 
+              ? this.selectedWalletProvider 
+              : (this.selectedPaymentMethod === 'cash' ? 'Cash on Delivery' : 'Credit / Debit Card'),
+            details: this.selectedPaymentMethod === 'card'
+              ? `Visa ending in ${this.mockCardNumber.replace(/\s/g, '').slice(-4) || '4242'}`
+              : (this.selectedPaymentMethod === 'wallet' ? `${this.selectedWalletProvider} (${this.walletPhoneNumber})` : 'Pay in Cash upon Delivery'),
+            timestamp: new Date().toISOString()
+          };
+          localStorage.setItem(`tp_order_payment_${createdOrder.id}`, JSON.stringify(paymentData));
+
           this.toast.success('Your order was placed successfully!');
           this.basketService.deleteBasket(basket.id);
           this.router.navigate(['/checkout/success', createdOrder.id]);
@@ -547,13 +746,17 @@ export class CheckoutComponent implements OnInit {
       });
     };
 
-    // Trigger payment authorization intent
-    const payment$ = this.basketService.createPaymentIntent();
-    if (payment$) {
-      payment$.subscribe({
-        next: () => executeOrder(),
-        error: () => executeOrder()
-      });
+    // If card payment, authorize via PaymentIntent
+    if (this.selectedPaymentMethod === 'card') {
+      const payment$ = this.basketService.createPaymentIntent();
+      if (payment$) {
+        payment$.subscribe({
+          next: () => executeOrder(),
+          error: () => executeOrder()
+        });
+      } else {
+        executeOrder();
+      }
     } else {
       executeOrder();
     }
